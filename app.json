@@ -6,6 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "scheme": "com.ufcg.computacaoufcg",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -21,6 +22,7 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.ufcg.computacaoufcg",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
@@ -28,6 +30,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "ac7766b4-dddb-4dba-a3c5-f03a8478a2e6"
+      }
     }
   }
 }

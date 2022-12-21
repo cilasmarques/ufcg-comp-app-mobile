@@ -1,16 +1,23 @@
 import { NavigationContainer } from '@react-navigation/native';
 
 // ROUTES
-import { PublicRoutes } from "./PublicRoutes";
-import { PrivateRoutes } from "./PrivateRoutes";
+import { PublicDrawerRoutes } from "./PublicDrawerRoutes";
+import { PrivateDrawerRoutes } from "./PrivateDrawerRoutes";
 import { useAuth } from '../context/AuthContext';
+import { useEffect, useState } from 'react';
 
 const MainRouter = () => {
-  const { handleGetAuthStatus } = useAuth();
+  const { auth } = useAuth();
+  const [authStatus, setAuthStatus] = useState(false);
+
+  useEffect(() => {
+    const status = auth && (auth._z !== null);
+    setAuthStatus(status);
+  }, [auth])
 
   return (
     <NavigationContainer>
-      {handleGetAuthStatus() ? <PrivateRoutes /> : <PublicRoutes />}
+      {authStatus ? <PrivateDrawerRoutes /> : <PublicDrawerRoutes />}
     </NavigationContainer>
   )
 }
