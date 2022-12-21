@@ -14,12 +14,24 @@ sudo apt-get update
 npm install --global yarn
 ```
 
-## Instale e configure o expo
+## Instale as ferramentas do expo
 ```
+sudo npm install -g expo-cli 
 sudo npm install -g eas-cli
 ```
 
-## Faça o build do aplicativo
+## Verifique a integridade do código
 ```
-eas build
+npx expo-cli doctor
+```
+
+## Build do aplicativo
+* Desenvolvimento
+```
+eas build -p android --profile development
+```
+
+## Execução do aplicativo
+```
+npx expo start --dev-client
 ```
