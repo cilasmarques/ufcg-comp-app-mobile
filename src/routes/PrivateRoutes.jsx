@@ -6,11 +6,13 @@ import {
 } from '@react-navigation/drawer';
 
 import { useAuth } from '../context/AuthContext';
+
 import DashboardScreen from '../screens/Dashboard/Dashboard';
+import ActivityRegisterScreen from '../screens/Activity/Register';
 
 const { Navigator, Screen } = createDrawerNavigator();
 
-export const PrivateDrawerRoutes = () => {
+export const PrivateRoutes = () => {
   const { user } = useAuth();
   const { handleLogout } = useAuth();
 
@@ -35,6 +37,8 @@ export const PrivateDrawerRoutes = () => {
       drawerContent={props => <CustomDrawerContent {...props} />}
     >
       <Screen name="Horas Complementares" component={DashboardScreen} />
+      <Screen name="Activity Register" component={ActivityRegisterScreen} options={{ drawerItemStyle: { display: 'none' } }} />
+
     </Navigator>
   );
 }

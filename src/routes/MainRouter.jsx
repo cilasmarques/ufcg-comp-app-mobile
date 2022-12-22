@@ -1,8 +1,8 @@
 import { NavigationContainer } from '@react-navigation/native';
 
 // ROUTES
-import { PublicDrawerRoutes } from "./PublicDrawerRoutes";
-import { PrivateDrawerRoutes } from "./PrivateDrawerRoutes";
+import { PublicRoutes } from "./PublicRoutes";
+import { PrivateRoutes } from "./PrivateRoutes";
 import { useAuth } from '../context/AuthContext';
 import { useEffect, useState } from 'react';
 
@@ -17,9 +17,9 @@ const MainRouter = () => {
 
   return (
     <NavigationContainer>
-      {authStatus ? <PrivateDrawerRoutes /> : <PublicDrawerRoutes />}
+      {authStatus ? <PrivateRoutes /> : <PublicRoutes />}
     </NavigationContainer>
   )
-}
+};
 
 export default MainRouter;

@@ -3,7 +3,7 @@ import LoginScreen from '../screens/Login/Login';
 
 const { Navigator, Screen } = createNativeStackNavigator();
 
-export const PublicDrawerRoutes = () => {
+export const PublicRoutes = () => {
   return (
     <Navigator screenOptions={{ headerShown: false }}>
       <Screen name="Login" component={LoginScreen} />
