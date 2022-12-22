@@ -16,3 +16,11 @@ export async function fetchUser(query) {
     console.log(error);
   }
 };
+
+export async function fetchUserByEmail(email) {
+  try {
+    return await axios.get(`${REACT_APP_API_URI}/user/${email}`);
+  } catch (error) {
+    console.log(error);
+  }
+};
