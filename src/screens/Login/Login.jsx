@@ -13,7 +13,6 @@ WebBrowser.maybeCompleteAuthSession();
 
 const LoginScreen = () => {
   const { handleAuthSuccess, handleAuthFailure } = useAuth();
-  // const [openEnrollModal, setOpenEnrollModal] = useState(false);
   const [request, response, promptAsync] = Google.useAuthRequest({
     expoClientId: REACT_APP_GOOGLE_EXPO_CLIENT_ID,
     androidClientId: REACT_APP_GOOGLE_ANDROID_CLIENT_ID
@@ -46,7 +45,6 @@ const LoginScreen = () => {
         const userData = response.data.user;
         handleAuthSuccess(authentication, userData);
       } else {
-        // setOpenEnrollModal(true);
         handleRegisterUser(authentication, userCredentials);
       }
     } else {
@@ -70,50 +68,15 @@ const LoginScreen = () => {
     }
   };
 
-  // const handleSubmitEnroll = async () => {
-  //   // ver como pegaria a variavel authentication
-  //   handleRegisterUser(authentication, { ...userCredentials, enroll: enroll });
-  //   setOpenEnrollModal(!openEnrollModal);
-  // };
-
   return (
-    <>
-      <View style={styles.container}>
-        <Text style={styles.title}> COMPUTAÇÃO@UFCG </Text>
-        <Button
-          disabled={!request}
-          title={"Fazer login com o Google"}
-          onPress={() => promptAsync({ useProxy: true, showInRecents: true })} //TODO set the useProxy on build 
-        />
-      </View>
-
-      {/* <Modal
-        animationType="slide"
-        transparent={true}
-        visible={openEnrollModal}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-          setOpenEnrollModal(!openEnrollModal);
-        }}
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalTitle}>Bem vindo!</Text>
-            <Text style={styles.modalText}>Antes de continuar, por favor informe sua matrícula</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Matrícula"
-              keyboardType="numeric"
-            />
-            <Button
-              disabled={!request}
-              title={"Continuar"}
-              onPress={handleSubmitEnroll}
-            />
-          </View>
-        </View>
-      </Modal> */}
-    </>
+    <View style={styles.container}>
+      <Text style={styles.title}> COMPUTAÇÃO@UFCG </Text>
+      <Button
+        disabled={!request}
+        title={"Fazer login com o Google"}
+        onPress={() => promptAsync({ useProxy: true, showInRecents: true })} //TODO On Build: set the useProxy on build 
+      />
+    </View>
   )
 }
 
@@ -128,43 +91,6 @@ const styles = StyleSheet.create({
     fontSize: 25,
     color: "#004A8F",
   },
-  input: {
-    height: 40,
-    width: 200,
-    margin: 12,
-    borderWidth: 1,
-    textAlign: 'center'
-  },
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center"
-  },
-  modalTitle: {
-    fontSize: 20,
-    marginBottom: 15,
-    textAlign: "center"
-  }
 });
 
 export default LoginScreen;

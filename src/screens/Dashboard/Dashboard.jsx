@@ -17,6 +17,7 @@ const DashboardScreen = () => {
         const query = { owner_email: user.email };
         const response = await fetchActivities(query, 0, 10, 'createdTime', 'asc');
 
+        // TODO Fix: move this logic to the backend
         let approvedAmount = 0;
         response.data.activities.forEach(a => { 
           if (a.status === 'VALIDATED')
@@ -32,7 +33,7 @@ const DashboardScreen = () => {
 
   return (
     <View>
-      {/* TODO make this header be a new component */}
+      {/* TODO Refact: make this header be a new component */}
       <View style={styles.headerContainer}>
         <View style={{ padding: 5 }}>
           <Text style={styles.headerGreetings}> Olá, {user?.name} </Text>
