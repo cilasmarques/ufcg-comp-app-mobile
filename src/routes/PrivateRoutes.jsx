@@ -37,8 +37,9 @@ export const PrivateRoutes = () => {
       drawerContent={props => <CustomDrawerContent {...props} />}
     >
       <Screen name="Horas Complementares" component={DashboardScreen} />
-      <Screen name="Activity Register" component={ActivityRegisterScreen} options={{ drawerItemStyle: { display: 'none' } }} />
-
+      <Screen name="Activity Register" component={ActivityRegisterScreen}
+        options={{ drawerItemStyle: { display: 'none' } }}
+      />
     </Navigator>
   );
 }

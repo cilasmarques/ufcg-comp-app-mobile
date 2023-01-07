@@ -1,8 +1,34 @@
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native"
 import { useAuth } from "../../context/AuthContext"
+import { useEffect, useState } from "react";
+import { fetchActivities } from "../../services/activityService";
+import { useNavigation } from "@react-navigation/native";
 
 const DashboardScreen = () => {
   const { user } = useAuth();
+
+  const [creditsMissing, setCreditsMissing] = useState();
+  const [creditsApproved, setCreditsApproved] = useState();
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    const loadData = async () => {
+      if (user) {
+        const query = { owner_email: user.email };
+        const response = await fetchActivities(query, 0, 10, 'createdTime', 'asc');
+
+        let approvedAmount = 0;
+        response.data.activities.forEach(a => { 
+          if (a.status === 'VALIDATED')
+          approvedAmount += Number(a.credits) 
+        });
+
+        setCreditsMissing(22 - approvedAmount);
+        setCreditsApproved(approvedAmount);
+      }
+    };
+    loadData();
+  }, []);
 
   return (
     <View>
@@ -15,13 +41,13 @@ const DashboardScreen = () => {
 
         <View style={styles.headerInfoContainer}>
           <View style={styles.infoBoxContainer}>
-            <Text style={styles.infoBoxText}>Contabilizadas</Text>
-            <Text style={styles.infoBoxText}>X horas (Y créditos)</Text>
+            <Text style={styles.infoBoxText}>Contabilizados</Text>
+            <Text style={styles.infoBoxText}>{creditsApproved} Créditos</Text>
           </View>
 
           <View style={styles.infoBoxContainer}>
-            <Text style={styles.infoBoxText}>Restantes</Text>
-            <Text style={styles.infoBoxText}>X horas (Y créditos)</Text>
+            <Text style={styles.infoBoxText}>Faltando</Text>
+            <Text style={styles.infoBoxText}>{creditsMissing} Créditos</Text>
           </View>
         </View>
       </View>
@@ -30,7 +56,7 @@ const DashboardScreen = () => {
         <TouchableOpacity style={styles.mainButton}>
           <Text style={styles.mainButtonText}>Guia do usuário</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.mainButton}>
+        <TouchableOpacity style={styles.mainButton} onPress={() => navigation.navigate('Activity Register')}>
           <Text style={styles.mainButtonText}>Registrar atividade</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.mainButton}>
@@ -66,7 +92,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     margin: 5,
     padding: 7,
-    borderRadius: 5
+    borderRadius: 5,
+    width: 150
   },
   infoBoxText: {
     color: "#004A8F",
