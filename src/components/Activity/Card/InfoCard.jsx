@@ -14,12 +14,12 @@ const ActivityInfoCard = ({ tableHeader, tableContent, activityStatus, activityU
       <View style={styles.tableContainerView(activityStatus)}>
         <Table borderStyle={{ borderWidth: 1, borderColor: '#C1C0B9' }}>
           <Row
-            data={[...tableHeader]}
+            data={tableHeader}
             style={styles.tableHead}
             textStyle={styles.tableText}
           />
           <Rows
-            data={[[...tableContent]]}
+            data={[tableContent]}
             textStyle={styles.tableText}
           />
         </Table>
@@ -36,9 +36,10 @@ const styles = StyleSheet.create({
     backgroundColor: (status === "VALIDATED") ? "#368C72" : (status === "REJECTED") ? "#8C3636" : "black",
     borderRadius: 10,
     marginBottom: 10,
+    alignItems: "center",
   }),
   tableContainerView: status => ({
-    width: "100%",
+    width: 380,
     padding: 15,
     borderRadius: 10,
     backgroundColor: "white",

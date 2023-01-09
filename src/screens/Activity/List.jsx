@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -11,28 +11,31 @@ import { useAuth } from "../../context/AuthContext";
 
 //SERVICES
 import { fetchActivities } from '../../services/activityService'
+import { useFocusEffect } from "@react-navigation/native";
 
 const ActivitiesListScreen = () => {
-  const initialPageConfiguration = { page: 0, size: 1000, sortField: 'updatedTime', sortOrder: 'asc' };
+  const initialPageConfiguration = { page: 0, size: 10, sortField: 'updatedTime', sortOrder: 'asc' };
 
   const { user } = useAuth();
   const [activities, setActivities] = useState(null);
 
-  useEffect(() => {
-    const loadData = async () => {
-      const result = await fetchActivities(
-        { "owner_email": user.email },
-        initialPageConfiguration.page,
-        initialPageConfiguration.size,
-        initialPageConfiguration.sortField,
-        initialPageConfiguration.sortOrder
-      );
+  useFocusEffect(
+    useCallback(() => {
+      const loadData = async () => {
+        const result = await fetchActivities(
+          { "owner_email": user.email },
+          initialPageConfiguration.page,
+          initialPageConfiguration.size,
+          initialPageConfiguration.sortField,
+          initialPageConfiguration.sortOrder
+        );
 
-      setActivities(result.data.activities);
-    };
+        setActivities(result.data.activities);
+      };
 
-    loadData();
-  }, []);
+      loadData();
+    }, [])
+  );
 
   return (
     <View style={styles.mainContainer}>
@@ -42,8 +45,9 @@ const ActivitiesListScreen = () => {
 
       <SafeAreaView style={styles.safeAreaView}>
         <ScrollView>
-          {activities?.map(act => (
+          {activities?.map((act, i) => (
             <ActivityInfoCard
+              key={i}
               tableHeader={['Tipo de atividade', 'Descrição Ativade', 'Período', 'Créditos', 'Comprovação']}
               tableContent={[act.type, act.description, act.period, act.credits, act.proof_doc]}
               activityStatus={act.status}
