@@ -1,35 +1,32 @@
+import { useCallback, useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native"
-import { useAuth } from "../../context/AuthContext"
-import { useEffect, useState } from "react";
-import { fetchActivities } from "../../services/activityService";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+
+// COMPONENTS
+import { fetchActivitiesComputedCredits } from "../../services/activityService";
+
+// CONTEXT
+import { useAuth } from "../../context/AuthContext";
 
 const DashboardScreen = () => {
   const { user } = useAuth();
-
-  const [creditsMissing, setCreditsMissing] = useState();
-  const [creditsApproved, setCreditsApproved] = useState();
   const navigation = useNavigation();
+  const [missingCredits, setMissingCredits] = useState();
+  const [computedCredits, setComputedCredits] = useState();
 
-  useEffect(() => {
-    const loadData = async () => {
-      if (user) {
-        const query = { owner_email: user.email };
-        const response = await fetchActivities(query, 0, 10, 'createdTime', 'asc');
+  useFocusEffect(
+    useCallback(() => {
+      const loadData = async () => {
+        if (user) {
+          const response = await fetchActivitiesComputedCredits(user.email);
+          setMissingCredits(response.data.computed_hours.missing_credits);
+          setComputedCredits(response.data.computed_hours.computed_credits);
+        }
+      };
 
-        // TODO Fix: move this logic to the backend
-        let approvedAmount = 0;
-        response.data.activities.forEach(a => { 
-          if (a.status === 'VALIDATED')
-          approvedAmount += Number(a.credits) 
-        });
-
-        setCreditsMissing(22 - approvedAmount);
-        setCreditsApproved(approvedAmount);
-      }
-    };
-    loadData();
-  }, []);
+      loadData();
+    }, [])
+  );
 
   return (
     <View>
@@ -43,12 +40,12 @@ const DashboardScreen = () => {
         <View style={styles.headerInfoContainer}>
           <View style={styles.infoBoxContainer}>
             <Text style={styles.infoBoxText}>Contabilizados</Text>
-            <Text style={styles.infoBoxText}>{creditsApproved} Créditos</Text>
+            <Text style={styles.infoBoxText}>{computedCredits} Créditos</Text>
           </View>
 
           <View style={styles.infoBoxContainer}>
             <Text style={styles.infoBoxText}>Faltando</Text>
-            <Text style={styles.infoBoxText}>{creditsMissing} Créditos</Text>
+            <Text style={styles.infoBoxText}>{missingCredits} Créditos</Text>
           </View>
         </View>
       </View>
