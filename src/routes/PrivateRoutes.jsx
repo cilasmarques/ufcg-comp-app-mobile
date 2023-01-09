@@ -9,6 +9,7 @@ import { useAuth } from '../context/AuthContext';
 
 import DashboardScreen from '../screens/Dashboard/Dashboard';
 import ActivityRegisterScreen from '../screens/Activity/Register';
+import ActivitiesListScreen from '../screens/Activity/List';
 
 const { Navigator, Screen } = createDrawerNavigator();
 
@@ -38,6 +39,9 @@ export const PrivateRoutes = () => {
     >
       <Screen name="Horas Complementares" component={DashboardScreen} />
       <Screen name="Activity Register" component={ActivityRegisterScreen}
+        options={{ drawerItemStyle: { display: 'none' } }}
+      />
+      <Screen name="Activities List" component={ActivitiesListScreen}
         options={{ drawerItemStyle: { display: 'none' } }}
       />
     </Navigator>

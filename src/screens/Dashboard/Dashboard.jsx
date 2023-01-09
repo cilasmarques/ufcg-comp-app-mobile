@@ -60,7 +60,7 @@ const DashboardScreen = () => {
         <TouchableOpacity style={styles.mainButton} onPress={() => navigation.navigate('Activity Register')}>
           <Text style={styles.mainButtonText}>Registrar atividade</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.mainButton}>
+        <TouchableOpacity style={styles.mainButton} onPress={() => navigation.navigate('Activities List')}>
           <Text style={styles.mainButtonText}>Atividades Registradas</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.mainButton}>
