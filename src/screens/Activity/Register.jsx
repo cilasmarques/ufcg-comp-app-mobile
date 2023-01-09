@@ -1,20 +1,18 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { View, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import { NativeBaseProvider, Select, TextArea, Button, Text } from "native-base";
+import { useFocusEffect } from '@react-navigation/native';
 import * as DocumentPicker from 'expo-document-picker';
 
-// CONTEXT
-import { useAuth } from "../../context/AuthContext";
-
-// SERVICE
-import { registerActivity } from "../../services/activityService";
+// COMPONENTS
 import ActivityPeriodPicker from "../../components/Activity/Picker/PeriodPicker";
+import ActivityRegisterModal from "../../components/Activity/Modal/RegisterModal";
 
 // TODO Refact: move this logic to the backend
 const ACTIVITY_TYPES = [
   { _id: 1, unity: "ano(s)", label: "Participação em Pesquisa de Iniciação Científica ou Extensão Reconhecida Institucionalmente pela UFCG." },
   { _id: 2, unity: "meses", label: "Participação em Projeto de Pesquisa e Desenvolvimento Reconhecido Institucionalmente pela UFCG, incluindo atividades de PD&I junto à CodeX." },
-  { _id: 3, unity: "semestre", label: "Participação em Monitoria Reconhecida Institucionalmente pela UFCG." },
+  { _id: 3, unity: "semestre(s)", label: "Participação em Monitoria Reconhecida Institucionalmente pela UFCG." },
   { _id: 4, unity: "horas", label: "Realização de Estágio Não Obrigatório." },
   { _id: 5, unity: "horas", label: "Atividades profissionais na área de Ciência da Computação (válido apenas para alunos que integralizaram pelo menos 80 créditos obrigatórios)" },
   { _id: 6, unity: "ano(s)", label: "Representação Estudantil. Participação na direção do Centro Acadêmico do curso de Ciência da Computação da UFCG, participação no colegiado do Curso de Ciência da Computação ou participação na Direção do Diretório Central de Estudantes da UFCG." },
@@ -28,11 +26,21 @@ const ACTIVITY_TYPES = [
 ];
 
 const ActivityRegisterScreen = () => {
-  const { user } = useAuth();
   const [period, setPeriod] = useState(null);
-  const [preflightDoc, setPreflightDoc] = useState(null);
   const [activityType, setActivityType] = useState(null);
-  const [activityDescription, setActivityDescription] = useState(null);
+  const [activityVoucher, setPreflightDoc] = useState(null);
+  const [activityDescription, setActivityDescription] = useState("");
+  const [openModal, setOpenModal] = useState(false);
+
+  useFocusEffect(
+    useCallback(() => {
+      /* Clearing the screen */
+      setPeriod(null);
+      setActivityType(null);
+      setPreflightDoc(null);
+      setActivityDescription("");
+    }, [])
+  );
 
   const handleSetDescription = (text) => {
     setActivityDescription(text);
@@ -50,32 +58,18 @@ const ActivityRegisterScreen = () => {
   };
 
   // TODO Feature: Add a confirmation step before finalizing the registration 
-  const handleSubmitActivity = async () => {
-    if (!period && activityType.unity !== "-") {
+  const handleFinishRegister = async () => {
+    if (period && activityType && activityDescription && activityVoucher) {
+      setOpenModal(true);
+    }
+    else if (!period && activityType?.unity !== "-") {
       Alert.alert("Período inválido");
     } else if (!activityDescription) {
       Alert.alert("Descrição inválida");
-    } else if (!preflightDoc) {
+    } else if (!activityVoucher) {
       Alert.alert("Documento inválido");
     } else {
-      const data = new FormData();
-
-      data.append('period', period);
-      data.append('owner_email', user.email);
-      data.append('type', activityType.label);
-      data.append('description', activityDescription);
-      data.append('preflight_doc', {
-        type: preflightDoc.mimeType,
-        name: preflightDoc.name,
-        uri: preflightDoc.uri
-      });
-
-      const result = await registerActivity(data);
-      if (result.status === 200) {
-        Alert.alert("Atividade registrada com sucesso");
-      } else {
-        Alert.alert("Erro ao registrar atividade. Por favor, tente novamente");
-      }
+      Alert.alert("Alguma coisa deu errada :(", "Por favor, verfique se os campos estão preenchidos corretamente.");
     }
   };
 
@@ -90,7 +84,7 @@ const ActivityRegisterScreen = () => {
           <View style={styles.invariantContentView}>
             <Select
               placeholder="Tipo de atividade"
-              selectedValue={activityType?._id}
+              selectedValue={activityType ? activityType._id : -1}
               onValueChange={handleSetActivityType}
             >
               {ACTIVITY_TYPES.map(activity =>
@@ -105,6 +99,7 @@ const ActivityRegisterScreen = () => {
             <TextArea
               keyboardType="default"
               placeholder="Descrição da atividade"
+              value={activityDescription}
               onChangeText={handleSetDescription}
             />
 
@@ -112,7 +107,7 @@ const ActivityRegisterScreen = () => {
               <TouchableOpacity style={styles.documentPickerButton} onPress={handlePickDocument}>
                 <Text style={styles.documentPickerButtonText}> Selecionar documento</Text>
               </TouchableOpacity>
-              <Text width="50%" padding="2px"> {preflightDoc?.name} </Text>
+              <Text width="50%" padding="2px"> {activityVoucher?.name} </Text>
             </View>
           </View>
 
@@ -125,12 +120,20 @@ const ActivityRegisterScreen = () => {
 
         <Button
           style={styles.footerButton}
-          onPress={handleSubmitActivity}
+          onPress={handleFinishRegister}
         >
           Registrar Atividade
         </Button>
-
       </View>
+
+      <ActivityRegisterModal
+        openModal={openModal}
+        setOpenModal={setOpenModal}
+        period={period}
+        activityVoucher={activityVoucher}
+        activityType={activityType?.label}
+        activityDescription={activityDescription}
+      />
     </NativeBaseProvider>
   )
 };
