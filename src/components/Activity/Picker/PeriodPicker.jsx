@@ -79,7 +79,7 @@ const ActivityPeriodPicker = ({ period, setPeriod, activityUnity }) => {
             onValueChange={value => setPeriod(value)}
           >
             {range(1, 4).map(i =>
-              <Select.Item key={i} label={`${i} semestre(s) letivo`} value={`${i} semestre(s) letivo`} />
+              <Select.Item key={i} label={`${i} semestre(s)`} value={`${i} semestre(s)`} />
             )}
           </Select>
         </>

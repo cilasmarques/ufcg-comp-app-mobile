@@ -8,7 +8,7 @@ import { useAuth } from "../../context/AuthContext";
 
 // SERVICE
 import { registerActivity } from "../../services/activityService";
-import ActivityPeriodPicker from "../../components/ActivityPicker/ParticipationPeriod";
+import ActivityPeriodPicker from "../../components/Activity/Picker/PeriodPicker";
 
 // TODO Refact: move this logic to the backend
 const ACTIVITY_TYPES = [
