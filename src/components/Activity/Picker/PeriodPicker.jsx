@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
+import {format} from 'date-fns'
 import { View, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import { Select, Text, Input } from "native-base";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 
 const ACTIVITY_UNITY_EVENT = ["-"];
-const ACTIVITY_UNITY_SEMESTER = ["semestre"];
+const ACTIVITY_UNITY_SEMESTER = ["semestre(s)"];
 const ACTIVITY_UNITY_RUNNING_TIME = ["horas"];
-const ACTIVITY_UNITY_CALENDAR = ["meses", "ano(s)"];
+const ACTIVITY_UNITY_CALENDAR = ["mês", "meses", "ano(s)"];
 
 const ActivityPeriodPicker = ({ period, setPeriod, activityUnity }) => {
   const [openInitialDatePicker, setOpenInitialDatePicker] = useState(false);
@@ -20,13 +21,14 @@ const ActivityPeriodPicker = ({ period, setPeriod, activityUnity }) => {
 
   useEffect(() => {
     if (finalDate && initialDate) {
-      let months = (finalDate.getFullYear() - initialDate.getFullYear()) * 12;
+      const nextDay = new Date(finalDate.getTime() + (24 * 60 * 60 * 1000));
+      let months = (nextDay.getFullYear() - initialDate.getFullYear()) * 12;
       months -= initialDate.getMonth();
-      months += finalDate.getMonth();
+      months += nextDay.getMonth();
 
-      let periodString = `De ${initialDate.toLocaleDateString()}`;
-      periodString += ` a ${finalDate.toLocaleDateString()}`;
-      periodString += ` (${months <= 0 ? 0 : months} meses)`;
+      let periodString = `De ${format(initialDate, 'dd/MM/yyyy')}`;
+      periodString += ` a ${format(finalDate, 'dd/MM/yyyy')}`;
+      periodString += ` (${months === 1 ? "1 mês" : (months + " meses")})`;
 
       setPeriod(periodString);
     }
@@ -62,10 +64,10 @@ const ActivityPeriodPicker = ({ period, setPeriod, activityUnity }) => {
         <>
           <Text> Por favor, defina o periodo de participação </Text>
           <TouchableOpacity style={styles.datePickerButton} onPress={() => setOpenInitialDatePicker(true)}>
-            <Text style={styles.datePickerButtonText}> Selecionar data de início: {initialDate?.toLocaleDateString()}</Text>
+            <Text style={styles.datePickerButtonText}> Selecionar data de início: {initialDate && format(initialDate, 'dd/MM/yyyy')}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.datePickerButton} onPress={() => setOpenFinalDatePicker(true)}>
-            <Text style={styles.datePickerButtonText}> Selecionar data de término: {finalDate?.toLocaleDateString()}</Text>
+            <Text style={styles.datePickerButtonText}> Selecionar data de término: {finalDate && format(finalDate, 'dd/MM/yyyy')}</Text>
           </TouchableOpacity>
         </>
       )}
