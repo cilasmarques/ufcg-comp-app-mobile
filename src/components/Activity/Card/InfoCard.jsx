@@ -12,7 +12,7 @@ const ActivityInfoCard = ({ tableHeader, tableContent, activityStatus, activityU
   return (
     <View style={styles.activityContainerView(activityStatus)}>
       <View style={styles.tableContainerView(activityStatus)}>
-        <Table borderStyle={{ borderWidth: 1, borderColor: '#C1C0B9' }}>
+        <Table borderStyle={styles.tableBorder}>
           <Row
             data={tableHeader}
             style={styles.tableHead}
@@ -55,6 +55,10 @@ const styles = StyleSheet.create({
   tableHead: {
     height: 40,
     backgroundColor: '#f1f8ff'
+  },
+  tableBorder: { 
+    borderWidth: 1, 
+    borderColor: '#C1C0B9' 
   },
   tableText: {
     margin: 6

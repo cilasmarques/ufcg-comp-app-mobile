@@ -14,7 +14,7 @@ import { fetchActivities } from '../../services/activityService'
 import { useFocusEffect } from "@react-navigation/native";
 
 const ActivitiesListScreen = () => {
-  const initialPageConfiguration = { page: 0, size: 10, sortField: 'updatedTime', sortOrder: 'asc' };
+  const initialPageConfiguration = { page: 0, size: -1, sortField: 'updatedTime', sortOrder: 'asc' };
 
   const { user } = useAuth();
   const [activities, setActivities] = useState(null);
@@ -49,7 +49,7 @@ const ActivitiesListScreen = () => {
             <ActivityInfoCard
               key={i}
               tableHeader={['Tipo de atividade', 'Descrição Ativade', 'Período', 'Créditos', 'Comprovação']}
-              tableContent={[act.type, act.description, act.period, act.credits, act.voucher]}
+              tableContent={[act.type, act.description, act.period, act.credits, act.voucher.split("/")[1]]}
               activityStatus={act.status}
               activityUpdatedTime={act.updatedTime}
             />

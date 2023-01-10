@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { StyleSheet, View, Button, Text, Alert, Modal, Pressable, TextInput } from "react-native"
+import { useEffect } from 'react';
+import { StyleSheet, View, Button, Text, Alert } from "react-native"
 
 import * as Google from 'expo-auth-session/providers/google';
 import * as WebBrowser from 'expo-web-browser';
