@@ -49,7 +49,7 @@ const ActivitiesListScreen = () => {
             <ActivityInfoCard
               key={i}
               tableHeader={['Tipo de atividade', 'Descrição Ativade', 'Período', 'Créditos', 'Comprovação']}
-              tableContent={[act.type, act.description, act.period, act.credits, act.proof_doc]}
+              tableContent={[act.type, act.description, act.period, act.credits, act.voucher]}
               activityStatus={act.status}
               activityUpdatedTime={act.updatedTime}
             />

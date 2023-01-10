@@ -20,7 +20,7 @@ const ActivityRegisterModal = ({ openModal, setOpenModal, activityType, activity
     data.append('owner_email', user.email);
     data.append('type', activityType);
     data.append('description', activityDescription);
-    data.append('preflight_doc', {
+    data.append('voucher', {
       type: activityVoucher.mimeType,
       name: activityVoucher.name,
       uri: activityVoucher.uri
