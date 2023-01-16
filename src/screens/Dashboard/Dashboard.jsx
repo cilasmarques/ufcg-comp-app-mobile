@@ -1,26 +1,41 @@
 import { useCallback, useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native"
+import { View, Text, TouchableOpacity, StyleSheet, Share, Alert } from "react-native"
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 
 // COMPONENTS
-import { fetchActivitiesComputedCredits } from "../../services/activityService";
+import ProcessRegisterModal from "../../components/Process/Modal/RegisterModal";
 
 // CONTEXT
 import { useAuth } from "../../context/AuthContext";
 
+// SERVICES
+import { fetchActivitiesComputedCredits } from "../../services/activityService";
+
 const DashboardScreen = () => {
   const { user } = useAuth();
   const navigation = useNavigation();
-  const [missingCredits, setMissingCredits] = useState();
-  const [computedCredits, setComputedCredits] = useState();
+  const [missingCredits, setMissingCredits] = useState(22);
+  const [computedCredits, setComputedCredits] = useState(0);
+  const [disableGeneration, setDisableGeneration] = useState(true);
+  const [openProcessModal, setOpenProcessModal] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
       const loadData = async () => {
         if (user) {
           const response = await fetchActivitiesComputedCredits(user.email);
-          setMissingCredits(response.data.computed_hours.missing_credits);
-          setComputedCredits(response.data.computed_hours.computed_credits);
+          const credits = response.data.credits_info;
+          const missing = credits.missing_credits;
+          const computed = credits.computed_credits;
+
+          setMissingCredits(missing);
+          setComputedCredits(computed);
+
+          if (missing === 22) {
+            setDisableGeneration(true);
+          } else {
+            setDisableGeneration(false);
+          }
         }
       };
 
@@ -60,10 +75,20 @@ const DashboardScreen = () => {
         <TouchableOpacity style={styles.mainButton} onPress={() => navigation.navigate('Activities List')}>
           <Text style={styles.mainButtonText}>Atividades Registradas</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.mainButton}>
+        <TouchableOpacity
+          disabled={disableGeneration}
+          onPress={disableGeneration ? null : () => setOpenProcessModal(true)}
+          style={disableGeneration ? styles.generationButtonDisabled : styles.generationButtonEnabled}
+        >
           <Text style={styles.mainButtonText}>Gerar Processo</Text>
         </TouchableOpacity>
       </View>
+
+      <ProcessRegisterModal
+        openModal={openProcessModal}
+        setOpenModal={setOpenProcessModal}
+      />
+
     </View>
   )
 };
@@ -115,7 +140,21 @@ const styles = StyleSheet.create({
   mainButtonText: {
     color: "#FFFFFF",
     textAlign: "center"
-  }
+  },
+  generationButtonEnabled: {
+    width: 300,
+    height: 35,
+    justifyContent: "center",
+    backgroundColor: "#368C72",
+    borderRadius: 3
+  },
+  generationButtonDisabled: {
+    width: 300,
+    height: 35,
+    justifyContent: "center",
+    backgroundColor: "#80B6CE",
+    borderRadius: 3
+  },
 });
 
 export default DashboardScreen;
