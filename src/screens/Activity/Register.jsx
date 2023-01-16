@@ -9,7 +9,7 @@ import ActivityPeriodPicker from "../../components/Activity/Picker/PeriodPicker"
 import ActivityRegisterModal from "../../components/Activity/Modal/RegisterModal";
 
 // TODO Refact: move this logic to the backend
-const ACTIVITY_TYPES = [
+const ACTIVITY_KINDS = [
   { _id: 1, unity: "ano(s)", label: "Participação em Pesquisa de Iniciação Científica ou Extensão Reconhecida Institucionalmente pela UFCG." },
   { _id: 2, unity: "meses", label: "Participação em Projeto de Pesquisa e Desenvolvimento Reconhecido Institucionalmente pela UFCG, incluindo atividades de PD&I junto à CodeX." },
   { _id: 3, unity: "semestre(s)", label: "Participação em Monitoria Reconhecida Institucionalmente pela UFCG." },
@@ -26,8 +26,8 @@ const ACTIVITY_TYPES = [
 ];
 
 const ActivityRegisterScreen = () => {
-  const [period, setPeriod] = useState(null);
-  const [activityType, setActivityType] = useState(null);
+  const [activityPeriod, setActivityPeriod] = useState(null);
+  const [activityKind, setActivityKind] = useState(null);
   const [activityVoucher, setPreflightDoc] = useState(null);
   const [activityDescription, setActivityDescription] = useState("");
   const [openModal, setOpenModal] = useState(false);
@@ -35,8 +35,8 @@ const ActivityRegisterScreen = () => {
   useFocusEffect(
     useCallback(() => {
       /* Clearing the screen */
-      setPeriod(null);
-      setActivityType(null);
+      setActivityPeriod(null);
+      setActivityKind(null);
       setPreflightDoc(null);
       setActivityDescription("");
     }, [])
@@ -46,10 +46,10 @@ const ActivityRegisterScreen = () => {
     setActivityDescription(text);
   };
 
-  const handleSetActivityType = (activityId) => {
-    const selectedActivity = ACTIVITY_TYPES.find(a => a._id === activityId);
-    setActivityType(selectedActivity);
-    setPeriod(null);
+  const handleSetActivityKind = (activityId) => {
+    const selectedActivity = ACTIVITY_KINDS.find(a => a._id === activityId);
+    setActivityKind(selectedActivity);
+    setActivityPeriod(null);
   };
 
   const handlePickDocument = async () => {
@@ -59,10 +59,10 @@ const ActivityRegisterScreen = () => {
 
   // TODO Feature: Add a confirmation step before finalizing the registration 
   const handleFinishRegister = async () => {
-    if (period && activityType && activityDescription && activityVoucher) {
+    if (activityPeriod && activityKind && activityDescription && activityVoucher) {
       setOpenModal(true);
     }
-    else if (!period && activityType?.unity !== "-") {
+    else if (!activityPeriod && activityKind?.unity !== "-") {
       Alert.alert("Período inválido");
     } else if (!activityDescription) {
       Alert.alert("Descrição inválida");
@@ -84,10 +84,10 @@ const ActivityRegisterScreen = () => {
           <View style={styles.invariantContentView}>
             <Select
               placeholder="Tipo de atividade"
-              selectedValue={activityType ? activityType._id : -1}
-              onValueChange={handleSetActivityType}
+              selectedValue={activityKind ? activityKind._id : -1}
+              onValueChange={handleSetActivityKind}
             >
-              {ACTIVITY_TYPES.map(activity =>
+              {ACTIVITY_KINDS.map(activity =>
                 <Select.Item
                   key={activity._id}
                   label={activity.label}
@@ -112,9 +112,9 @@ const ActivityRegisterScreen = () => {
           </View>
 
           <ActivityPeriodPicker
-            period={period}
-            setPeriod={setPeriod}
-            activityUnity={activityType?.unity}
+            period={activityPeriod}
+            setPeriod={setActivityPeriod}
+            activityUnity={activityKind?.unity}
           />
         </View>
 
@@ -129,9 +129,9 @@ const ActivityRegisterScreen = () => {
       <ActivityRegisterModal
         openModal={openModal}
         setOpenModal={setOpenModal}
-        period={period}
+        activityPeriod={activityPeriod}
         activityVoucher={activityVoucher}
-        activityType={activityType?.label}
+        activityKind={activityKind?.label}
         activityDescription={activityDescription}
       />
     </NativeBaseProvider>

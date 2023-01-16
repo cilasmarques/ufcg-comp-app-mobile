@@ -20,7 +20,7 @@ export async function fetchActivities(query, page, rowsPerPage, sort, order) {
       query
     );
   } catch (error) {
-    handleError(error);
+    console.log(error);
   }
 }
 
@@ -30,6 +30,21 @@ export async function fetchActivitiesComputedCredits(userEmail) {
       `${REACT_APP_API_URI}/activities/computeCredits/${userEmail}`
     );
   } catch (error) {
-    handleError(error);
+    console.log(error);
+  }
+}
+
+export async function generateProcess(ownerEmail, ownerName, ownerEnroll) {
+  try {
+    return await axios.post(
+      `${REACT_APP_API_URI}/process/generate`,
+      {
+        owner_email: ownerEmail,
+        owner_name: ownerName,
+        owner_enroll: ownerEnroll,
+      }
+    );
+  } catch (error) {
+    console.log(error);
   }
 }

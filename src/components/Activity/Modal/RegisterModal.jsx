@@ -10,15 +10,15 @@ import { useAuth } from "../../../context/AuthContext";
 import { registerActivity } from "../../../services/activityService";
 import { Button } from "native-base";
 
-const ActivityRegisterModal = ({ openModal, setOpenModal, activityType, activityDescription, period, activityVoucher }) => {
+const ActivityRegisterModal = ({ openModal, setOpenModal, activityKind, activityDescription, activityPeriod, activityVoucher }) => {
   const { user } = useAuth();
 
   const handleSubmitActivity = async () => {
     const data = new FormData();
 
-    data.append('period', period || "-");
+    data.append('period', activityPeriod || "-");
     data.append('owner_email', user.email);
-    data.append('type', activityType);
+    data.append('kind', activityKind);
     data.append('description', activityDescription);
     data.append('voucher', {
       type: activityVoucher.mimeType,
@@ -51,7 +51,7 @@ const ActivityRegisterModal = ({ openModal, setOpenModal, activityType, activity
           <Text style={styles.modalText}>Por favor, verifique as informações antes de finalizar.</Text>
           <ActivityInfoCard
             tableHeader={['Tipo de atividade', 'Descrição Ativade', 'Período', 'Comprovação']}
-            tableContent={[activityType, activityDescription, period, activityVoucher?.name]}
+            tableContent={[activityKind, activityDescription, activityPeriod, activityVoucher?.name]}
             activityStatus={'CREATED'}
             activityUpdatedTime={new Date()}
           />
