@@ -10,6 +10,7 @@ import { useAuth } from '../context/AuthContext';
 import DashboardScreen from '../screens/Dashboard/Dashboard';
 import ActivityRegisterScreen from '../screens/Activity/Register';
 import ActivitiesListScreen from '../screens/Activity/List';
+import UserGuide from '../screens/UserGuide/UserGuide';
 
 const { Navigator, Screen } = createDrawerNavigator();
 
@@ -21,7 +22,7 @@ export const PrivateRoutes = () => {
     return (
       <DrawerContentScrollView {...props} style={{ marginTop: 25, borderRadius: 5 }}>
         <DrawerItemList {...props} />
-        <DrawerItem label="Logout" onPress={handleLogout} />
+        <DrawerItem label="Sair" onPress={handleLogout} />
       </DrawerContentScrollView>
     );
   };
@@ -37,7 +38,10 @@ export const PrivateRoutes = () => {
       }}
       drawerContent={props => <CustomDrawerContent {...props} />}
     >
-      <Screen name="Horas Complementares" component={DashboardScreen} />
+      <Screen name="Atividades Complementares" component={DashboardScreen} />
+      <Screen name="User Guide" component={UserGuide}
+        options={{ drawerItemStyle: { display: 'none' } }}
+      />
       <Screen name="Activity Register" component={ActivityRegisterScreen}
         options={{ drawerItemStyle: { display: 'none' } }}
       />

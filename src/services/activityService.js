@@ -1,26 +1,35 @@
 import axios from "axios";
 import { REACT_APP_API_URI } from "@env";
 
-export async function registerActivity(data) {
+export async function registerActivity(activity) {
   try {
-    return await axios.post(`${REACT_APP_API_URI}/activity/register`, data, {
+    return await axios.post(`${REACT_APP_API_URI}/activity/register`, activity, 
+    {
       headers: {
-        "Content-Type": "multipart/form-data",
-      },
+        "Content-Type": "multipart/form-data"
+      }
     });
   } catch (error) {
-    console.log(error);
+    //TODO colocar isso em outros lugares
+    if (error.response) {
+      console.error(error.response.data);
+      console.error(error.response.status);
+      console.error(error.response.headers);
+    } else if (error.request) {
+      console.error(error.request);
+    } else {
+      console.error('Error', error.message);
+    }
   }
 }
 
 export async function fetchActivities(query, page, rowsPerPage, sort, order) {
   try {
     return await axios.post(
-      `${REACT_APP_API_URI}/activities?page=${page}&size=${rowsPerPage}&sort=${sort}&order=${order}`,
-      query
+      `${REACT_APP_API_URI}/activities/find_by_state?page=${page}&size=${rowsPerPage}&sort=${sort}&order=${order}`, query
     );
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }
 
@@ -30,21 +39,26 @@ export async function fetchActivitiesComputedCredits(userEmail) {
       `${REACT_APP_API_URI}/activities/computeCredits/${userEmail}`
     );
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }
 
-export async function generateProcess(ownerEmail, ownerName, ownerEnroll) {
+export async function fetchActivitiesMetrics() {
   try {
-    return await axios.post(
-      `${REACT_APP_API_URI}/process/generate`,
-      {
-        owner_email: ownerEmail,
-        owner_name: ownerName,
-        owner_enroll: ownerEnroll,
-      }
+    return await axios.get(
+      `${REACT_APP_API_URI}/activities/metrics`
     );
   } catch (error) {
-    console.log(error);
+    console.error(error);
+  }
+}
+
+
+export async function generateProcess(data) {
+  try {
+    return await axios.post(
+      `${REACT_APP_API_URI}/process/generate`, data);
+  } catch (error) {
+    console.error(error);
   }
 }

@@ -1,12 +1,15 @@
 import { useEffect } from 'react';
 import { StyleSheet, View, Button, Text, Alert } from "react-native"
-
 import * as Google from 'expo-auth-session/providers/google';
 import * as WebBrowser from 'expo-web-browser';
 
+// ENVOIROMENT VARIABLES
 import { REACT_APP_GOOGLE_EXPO_CLIENT_ID, REACT_APP_GOOGLE_ANDROID_CLIENT_ID, REACT_APP_EMAIL_DOMAIN } from '@env';
 
+// CONTEXT
 import { useAuth } from "../../context/AuthContext";
+
+// SERVICES
 import { fetchUserByEmail, registerUser } from '../../services/userService';
 
 WebBrowser.maybeCompleteAuthSession();
@@ -27,7 +30,7 @@ const LoginScreen = () => {
   }, [response]);
 
   const handleAuthUser = async (authentication) => {
-    const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+    const response = await fetch(Google.discovery.userInfoEndpoint, {
       method: 'GET',
       headers: {
         Accept: 'application/json',
@@ -35,7 +38,7 @@ const LoginScreen = () => {
         'Content-Type': 'application/json'
       },
     });
-
+    
     const userCredentials = await response.json();
     const emailRegex = new RegExp(`[a-z0-9.]+${REACT_APP_EMAIL_DOMAIN}`);
 
@@ -56,7 +59,6 @@ const LoginScreen = () => {
     const userData = {
       "name": userCredentials.name,
       "email": userCredentials.email,
-      "picture": userCredentials.picture,
       "role": "student",
     };
 
@@ -74,7 +76,11 @@ const LoginScreen = () => {
       <Button
         disabled={!request}
         title={"Fazer login com o Google"}
-        onPress={() => promptAsync({ useProxy: true, showInRecents: true })} //TODO On Build: set the useProxy on build 
+        onPress={() => promptAsync({ 
+          projectNameForProxy: "@cilasmfm/computacaoufcg", //Remove in production
+          useProxy: true, //Set to false in production
+          showInRecents: true
+        })} 
       />
     </View>
   )

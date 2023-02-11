@@ -1,4 +1,5 @@
 import { View, Text, StyleSheet, Modal, Alert } from "react-native";
+import { Button } from "native-base";
 
 // COMPONENTS
 import ActivityInfoCard from "../Card/InfoCard";
@@ -8,15 +9,12 @@ import { useAuth } from "../../../context/AuthContext";
 
 // SERVICE
 import { registerActivity } from "../../../services/activityService";
-import { Button } from "native-base";
 
-const ActivityRegisterModal = ({ openModal, setOpenModal, activityKind, activityDescription, activityPeriod, activityVoucher }) => {
+const ActivityRegisterModal = ({ clearData, openModal, setOpenModal, activityKind, activityDescription, activityPeriod, activityVoucher }) => {
   const { user } = useAuth();
 
   const handleSubmitActivity = async () => {
     const data = new FormData();
-
-    data.append('period', activityPeriod || "-");
     data.append('owner_email', user.email);
     data.append('kind', activityKind);
     data.append('description', activityDescription);
@@ -26,8 +24,13 @@ const ActivityRegisterModal = ({ openModal, setOpenModal, activityKind, activity
       uri: activityVoucher.uri
     });
 
-    const result = await registerActivity(data);
-    if (result.status === 200) {
+    activityPeriod?.workload && data.append('workload', activityPeriod.workload);
+    activityPeriod?.startDate && data.append('start_date',new Date(activityPeriod.startDate).toISOString());
+    activityPeriod?.endDate && data.append('end_date', new Date(activityPeriod.endDate).toISOString());
+
+    const response = await registerActivity(data);
+    if (response.status === 200) {
+      clearData();
       Alert.alert("Atividade registrada com sucesso");
     } else {
       Alert.alert("Erro ao registrar atividade. Por favor, tente novamente");
@@ -51,8 +54,9 @@ const ActivityRegisterModal = ({ openModal, setOpenModal, activityKind, activity
           <Text style={styles.modalText}>Por favor, verifique as informações antes de finalizar.</Text>
           <ActivityInfoCard
             tableHeader={['Tipo de atividade', 'Descrição Ativade', 'Período', 'Comprovação']}
-            tableContent={[activityKind, activityDescription, activityPeriod, activityVoucher?.name]}
+            tableContent={[activityKind, activityDescription, activityPeriod?.fullPeriod, activityVoucher?.name]}
             activityStatus={'CREATED'}
+            activityJustify={null}
             activityUpdatedTime={new Date()}
           />
           <Button
@@ -75,6 +79,10 @@ const styles = StyleSheet.create({
     marginTop: 22
   },
   modalView: {
+    display: "flex",
+    justifyContent: "space-around",
+    width: 400,
+    minHeight: 500,
     margin: 20,
     backgroundColor: "white",
     borderRadius: 20,

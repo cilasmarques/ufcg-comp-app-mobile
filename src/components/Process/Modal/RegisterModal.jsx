@@ -13,11 +13,14 @@ import { generateProcess } from "../../../services/activityService";
 const ProcessRegisterModal = ({ openModal, setOpenModal }) => {
   const { user } = useAuth();
 
-  const [ownerName, setOwnerName] = useState("");
   const [ownerEnroll, setOwnerEnroll] = useState("");
 
   const grabPdf = async () => {
-    const response = await generateProcess(user.email, ownerName, ownerEnroll);
+    const response = await generateProcess({
+      owner_email: user.email,
+      owner_name: user.name,
+      owner_enroll: ownerEnroll
+    });
     const buff = Buffer.from(response.data.file, 'base64');
     return buff.toString('base64');
   }
@@ -26,8 +29,6 @@ const ProcessRegisterModal = ({ openModal, setOpenModal }) => {
     try {
       if (!ownerEnroll) {
         Alert.alert("Matrícula inválida", "Por favor, informe sua matrícula.");      
-      } else if (!ownerName) {
-        Alert.alert("Nome inválido", "Por favor, informe seu nome completo."); 
       } else {
         const file = await grabPdf()
         const permissions = await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
@@ -44,12 +45,12 @@ const ProcessRegisterModal = ({ openModal, setOpenModal }) => {
               setOpenModal(false);
             })
             .catch((e) => {
-              console.log(e);
+              console.error(e);
             });
         }
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
@@ -75,12 +76,6 @@ const ProcessRegisterModal = ({ openModal, setOpenModal }) => {
               onChangeText={(value) => setOwnerEnroll(value)}
             />
 
-            <Input
-              keyboardType="default"
-              placeholder="Insira seu nome completo"
-              onChangeText={(value) => setOwnerName(value)}
-            />
-
             <Button
               style={styles.footerButton}
               onPress={handleGenerateProcess}
@@ -104,7 +99,7 @@ const styles = StyleSheet.create({
   modalView: {
     display: "flex",
     justifyContent: "space-around",
-    height: 350,
+    height: 300,
     margin: 20,
     backgroundColor: "white",
     borderRadius: 20,

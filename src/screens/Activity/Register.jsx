@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { View, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import { NativeBaseProvider, Select, TextArea, Button, Text } from "native-base";
 import { useFocusEffect } from '@react-navigation/native';
@@ -7,48 +7,49 @@ import * as DocumentPicker from 'expo-document-picker';
 // COMPONENTS
 import ActivityPeriodPicker from "../../components/Activity/Picker/PeriodPicker";
 import ActivityRegisterModal from "../../components/Activity/Modal/RegisterModal";
-
-// TODO Refact: move this logic to the backend
-const ACTIVITY_KINDS = [
-  { _id: 1, unity: "ano(s)", label: "Participação em Pesquisa de Iniciação Científica ou Extensão Reconhecida Institucionalmente pela UFCG." },
-  { _id: 2, unity: "meses", label: "Participação em Projeto de Pesquisa e Desenvolvimento Reconhecido Institucionalmente pela UFCG, incluindo atividades de PD&I junto à CodeX." },
-  { _id: 3, unity: "semestre(s)", label: "Participação em Monitoria Reconhecida Institucionalmente pela UFCG." },
-  { _id: 4, unity: "horas", label: "Realização de Estágio Não Obrigatório." },
-  { _id: 5, unity: "horas", label: "Atividades profissionais na área de Ciência da Computação (válido apenas para alunos que integralizaram pelo menos 80 créditos obrigatórios)" },
-  { _id: 6, unity: "ano(s)", label: "Representação Estudantil. Participação na direção do Centro Acadêmico do curso de Ciência da Computação da UFCG, participação no colegiado do Curso de Ciência da Computação ou participação na Direção do Diretório Central de Estudantes da UFCG." },
-  { _id: 7, unity: "-", label: "Participação na autoria de trabalho em Evento" },
-  { _id: 8, unity: "-", label: "Participação em Evento (apresentador)" },
-  { _id: 9, unity: "-", label: "Participação em Evento (ouvinte)." },
-  { _id: 10, unity: "-", label: "Participação em Evento apoiado (organizador)." },
-  { _id: 11, unity: "-", label: "Ministrante em atividade de extensão (oficinas, minicursos, cursos de extensão)." },
-  { _id: 12, unity: "-", label: "Colaborador / organizador em atividade de extensão (oficinas, minicursos, cursos de extensão)." },
-  { _id: 13, unity: "-", label: "Outras Atividades." },
-];
+import { fetchActivitiesMetrics } from "../../services/activityService";
 
 const ActivityRegisterScreen = () => {
   const [activityPeriod, setActivityPeriod] = useState(null);
-  const [activityKind, setActivityKind] = useState(null);
+  const [activityMetrics, setActivityMertics] = useState(null);
   const [activityVoucher, setPreflightDoc] = useState(null);
   const [activityDescription, setActivityDescription] = useState("");
+  const [DBActMetricsInfo, setDBActMetricsInfo] = useState([]);
   const [openModal, setOpenModal] = useState(false);
+
+  const clearData = () => {
+    /* Clearing the screen */
+    setPreflightDoc(null);
+    setActivityPeriod(null);
+    setActivityMertics(null);
+    setActivityDescription("");
+  }
 
   useFocusEffect(
     useCallback(() => {
-      /* Clearing the screen */
-      setActivityPeriod(null);
-      setActivityKind(null);
-      setPreflightDoc(null);
-      setActivityDescription("");
+      clearData();
     }, [])
   );
 
+  useEffect(() => {
+    const loadData = async () => {
+      const response = await fetchActivitiesMetrics();
+      setDBActMetricsInfo(response.data.metrics_info);
+     }
+    loadData();
+  }, [])
+
   const handleSetDescription = (text) => {
-    setActivityDescription(text);
+    if (text.trim().length > 0) {
+      setActivityDescription(text);
+    } else if (text.length > 255) {
+      Alert.alert("A descrição deve ter no máximo 255 caracteres");
+    }
   };
 
-  const handleSetActivityKind = (activityId) => {
-    const selectedActivity = ACTIVITY_KINDS.find(a => a._id === activityId);
-    setActivityKind(selectedActivity);
+  const handleSetActivityKind = (activityKind) => {
+    const selectedActMetrics = DBActMetricsInfo.find(a => a.kind === activityKind);
+    setActivityMertics(selectedActMetrics);
     setActivityPeriod(null);
   };
 
@@ -57,12 +58,11 @@ const ActivityRegisterScreen = () => {
     setPreflightDoc(document);
   };
 
-  // TODO Feature: Add a confirmation step before finalizing the registration 
   const handleFinishRegister = async () => {
-    if (activityPeriod && activityKind && activityDescription && activityVoucher) {
+    if (activityPeriod.fullPeriod && activityMetrics && activityDescription && activityVoucher) {
       setOpenModal(true);
     }
-    else if (!activityPeriod && activityKind?.unity !== "-") {
+    else if (!activityPeriod && !activityMetrics.workload_unity) {
       Alert.alert("Período inválido");
     } else if (!activityDescription) {
       Alert.alert("Descrição inválida");
@@ -84,14 +84,14 @@ const ActivityRegisterScreen = () => {
           <View style={styles.invariantContentView}>
             <Select
               placeholder="Tipo de atividade"
-              selectedValue={activityKind ? activityKind._id : -1}
+              selectedValue={activityMetrics ? activityMetrics.kind : ""}
               onValueChange={handleSetActivityKind}
             >
-              {ACTIVITY_KINDS.map(activity =>
+              {DBActMetricsInfo.map((activity, index) =>
                 <Select.Item
-                  key={activity._id}
-                  label={activity.label}
-                  value={activity._id}
+                  key={index}
+                  label={activity.kind}
+                  value={activity.kind}
                 />
               )}
             </Select>
@@ -114,7 +114,7 @@ const ActivityRegisterScreen = () => {
           <ActivityPeriodPicker
             period={activityPeriod}
             setPeriod={setActivityPeriod}
-            activityUnity={activityKind?.unity}
+            activityUnity={activityMetrics?.workload_unity}
           />
         </View>
 
@@ -127,11 +127,12 @@ const ActivityRegisterScreen = () => {
       </View>
 
       <ActivityRegisterModal
+        clearData={clearData}
         openModal={openModal}
         setOpenModal={setOpenModal}
         activityPeriod={activityPeriod}
         activityVoucher={activityVoucher}
-        activityKind={activityKind?.label}
+        activityKind={activityMetrics?.kind}
         activityDescription={activityDescription}
       />
     </NativeBaseProvider>
