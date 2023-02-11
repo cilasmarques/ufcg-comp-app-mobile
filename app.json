@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "ufcg-tcc-comp-app-mobile",
-    "slug": "ufcg-tcc-comp-app-mobile",
+    "name": "computacaoufcg",
+    "slug": "computacaoufcg",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -10,7 +10,7 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#F1F3FF"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -24,16 +24,13 @@
     "android": {
       "package": "com.ufcg.computacaoufcg",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#F1F3FF"
       }
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "ac7766b4-dddb-4dba-a3c5-f03a8478a2e6"
+        "projectId": "e77c50e1-6f33-42f2-a8dd-a3252fcb9123"
       }
     }
   }

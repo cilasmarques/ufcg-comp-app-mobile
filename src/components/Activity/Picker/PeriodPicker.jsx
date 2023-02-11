@@ -1,59 +1,97 @@
-import { useEffect, useState } from "react";
-import {format} from 'date-fns'
+import { useState } from "react";
+import { format } from 'date-fns'
 import { View, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import { Select, Text, Input } from "native-base";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 
 const ACTIVITY_UNITY_EVENT = ["-"];
 const ACTIVITY_UNITY_SEMESTER = ["semestre(s)"];
-const ACTIVITY_UNITY_RUNNING_TIME = ["horas"];
-const ACTIVITY_UNITY_CALENDAR = ["mês", "meses", "ano(s)"];
+const ACTIVITY_UNITY_RUNNING_TIME = ["hora(s)"];
+const ACTIVITY_UNITY_CALENDAR = ["meses", "ano(s)"];
 
 const ActivityPeriodPicker = ({ period, setPeriod, activityUnity }) => {
   const [openInitialDatePicker, setOpenInitialDatePicker] = useState(false);
   const [openFinalDatePicker, setOpenFinalDatePicker] = useState(false);
-  const [initialDate, setInitialDate] = useState(null);
-  const [finalDate, setFinalDate] = useState(null);
 
   function range(start, end) {
     return Array(end - start + 1).fill().map((_, idx) => start + idx)
   };
 
-  useEffect(() => {
-    if (finalDate && initialDate) {
-      const nextDay = new Date(finalDate.getTime() + (24 * 60 * 60 * 1000));
-      let months = (nextDay.getFullYear() - initialDate.getFullYear()) * 12;
-      months -= initialDate.getMonth();
-      months += nextDay.getMonth();
+  const computeDateWorkload = (endDate, startDate) => {
+    if (activityUnity === "meses") {
+      if (endDate && startDate) {
+        const nextDay = new Date(endDate.getTime() + (24 * 60 * 60 * 1000));
+        let months = (nextDay.getFullYear() - startDate.getFullYear()) * 12;
+        months -= startDate.getMonth();
+        months += nextDay.getMonth();
 
-      let periodString = `De ${format(initialDate, 'dd/MM/yyyy')}`;
-      periodString += ` a ${format(finalDate, 'dd/MM/yyyy')}`;
-      periodString += ` (${months === 1 ? "1 mês" : (months + " meses")})`;
-
-      setPeriod(periodString);
+        if (months < 3) {
+          Alert.alert(" Periodo inválido", "O período de participação mínimo para o aproveitamento de atividades dessa natureza é de 3 meses");
+          return;
+        } else {
+          return months;
+        }
+      }
     }
-  }, [initialDate, finalDate]);
+    else if (activityUnity === "ano(s)") {
+      if (endDate && startDate) {
+        const nextDay = new Date(endDate.getTime() + (24 * 60 * 60 * 1000));
+        let years = (nextDay.getFullYear() - startDate.getFullYear());
 
-  const handleSetInitialDate = (date) => {
-    setOpenInitialDatePicker(false);
-
-    const iDate = new Date(date.nativeEvent.timestamp)
-    if (finalDate && finalDate < iDate) {
-      Alert.alert("A data de início precisa ser menor que a data de término");
-    } else {
-      setInitialDate(iDate);
+        if (workload < 1) {
+          Alert.alert(" Periodo inválido", "O período de participação mínimo para o aproveitamento de atividades dessa natureza é de 1 ano");
+          return;
+        } else {
+          return years;
+        }
+      }
     }
   };
 
-  const handleSetFinalDate = (date) => {
+  const handleSetPeriodByDate = (initialDate, finalDate) => {
     setOpenFinalDatePicker(false);
+    setOpenInitialDatePicker(false);
 
-    const fDate = new Date(date.nativeEvent.timestamp)
-    if (initialDate && initialDate > fDate) {
-      Alert.alert("A data de início precisa ser maior que a data de término");
-    } else {
-      setFinalDate(fDate);
+    const startDate = initialDate !== null ? new Date(initialDate) : period?.startDate;
+    const endDate = finalDate !== null ? new Date(finalDate) : period?.endDate;
+    setPeriod({...period, startDate: startDate, endDate: endDate});
+
+    if (endDate && startDate) {
+      if (endDate < startDate) {
+        Alert.alert("A data de início precisa ser menor que a data de término");
+        return;
+      } 
+
+      const workload = computeDateWorkload(endDate, startDate);
+      if (workload) {
+        const periodString = `De ${format(startDate, 'dd/MM/yyyy')} a ${format(endDate, 'dd/MM/yyyy')} (${workload} ${activityUnity})`;
+  
+        setPeriod({
+          workload: workload,
+          startDate: startDate,
+          endDate: endDate,
+          fullPeriod: periodString,
+        });
+      }
     }
+  };
+
+  const handleSetPeriodBySemesters = (value) => {
+    setPeriod({
+      workload: value,
+      startDate: null,
+      endDate: null,
+      fullPeriod: `${value} semestre(s)`,
+    });
+  };
+
+  const handleSetPeriodByHours = (value) => {
+    setPeriod({
+      workload: value,
+      startDate: null,
+      endDate: null,
+      fullPeriod: `${value} hora(s)`,
+    });
   };
 
   return (
@@ -64,10 +102,10 @@ const ActivityPeriodPicker = ({ period, setPeriod, activityUnity }) => {
         <>
           <Text> Por favor, defina o periodo de participação </Text>
           <TouchableOpacity style={styles.datePickerButton} onPress={() => setOpenInitialDatePicker(true)}>
-            <Text style={styles.datePickerButtonText}> Selecionar data de início: {initialDate && format(initialDate, 'dd/MM/yyyy')}</Text>
+            <Text style={styles.datePickerButtonText}> Selecionar data de início: {period?.startDate && format(period.startDate, 'dd/MM/yyyy')}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.datePickerButton} onPress={() => setOpenFinalDatePicker(true)}>
-            <Text style={styles.datePickerButtonText}> Selecionar data de término: {finalDate && format(finalDate, 'dd/MM/yyyy')}</Text>
+            <Text style={styles.datePickerButtonText}> Selecionar data de término: {period?.endDate && format(period.endDate, 'dd/MM/yyyy')}</Text>
           </TouchableOpacity>
         </>
       )}
@@ -77,11 +115,11 @@ const ActivityPeriodPicker = ({ period, setPeriod, activityUnity }) => {
           <Text>Por favor, selecione a quantidade de semestres correspondentes ao periodo de participação.</Text>
           <Select
             placeholder="Quantidade de semestres"
-            selectedValue={period}
-            onValueChange={value => setPeriod(value)}
+            selectedValue={period?.workload}
+            onValueChange={handleSetPeriodBySemesters}
           >
             {range(1, 4).map(i =>
-              <Select.Item key={i} label={`${i} semestre(s)`} value={`${i} semestre(s)`} />
+              <Select.Item key={i} label={`${i} semestre(s)`} value={i} />
             )}
           </Select>
         </>
@@ -93,7 +131,7 @@ const ActivityPeriodPicker = ({ period, setPeriod, activityUnity }) => {
           <Input
             placeholder="Insira a quantidade de horas"
             keyboardType="numeric"
-            onChangeText={(value) => setPeriod(`${value} horas`)}
+            onChangeText={handleSetPeriodByHours}
           />
         </>
       )}
@@ -104,21 +142,19 @@ const ActivityPeriodPicker = ({ period, setPeriod, activityUnity }) => {
 
       {openInitialDatePicker &&
         <RNDateTimePicker
-          is24Hour={true}
           display='default'
           value={new Date()}
           maximumDate={new Date()}
-          onChange={handleSetInitialDate}
+          onChange={(e) => handleSetPeriodByDate(e.nativeEvent.timestamp, null)}
         />
       }
 
       {openFinalDatePicker &&
         <RNDateTimePicker
-          is24Hour={true}
           display='default'
           value={new Date()}
           maximumDate={new Date()}
-          onChange={handleSetFinalDate}
+          onChange={(e) => handleSetPeriodByDate(null, e.nativeEvent.timestamp)}
         />
       }
     </View>
