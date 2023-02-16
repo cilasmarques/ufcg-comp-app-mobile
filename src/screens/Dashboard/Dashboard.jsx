@@ -4,7 +4,7 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { RefreshControl, ScrollView } from "react-native-gesture-handler";
 
 // ENVOIROMENT VARIABLES
-import { REACT_APP_API_URI } from '@env';
+const REACT_APP_API_URI="http://150.165.15.9:8091"
 
 // COMPONENTS
 import ProcessRegisterModal from "../../components/Process/Modal/RegisterModal";
@@ -83,7 +83,7 @@ const DashboardScreen = () => {
         <View style={styles.headerContainer}>
           <View style={{ padding: 5 }}>
             <Text style={styles.headerGreetings}> Olá, {user?.name} </Text>
-            <Text style={styles.headerPageTitle}> Atividades Complementares </Text>
+            <Text style={styles.headerPageTitle}>Atividades Complementares</Text>
           </View>
 
           <View style={styles.headerInfoContainer}>

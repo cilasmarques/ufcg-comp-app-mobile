@@ -145,6 +145,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: "center",
     justifyContent: "center",
+    //center the content horizontally
   },
   mainTitle: {
     padding: 5,
@@ -153,20 +154,20 @@ const styles = StyleSheet.create({
     color: "#004A8F",
   },
   registerBoxView: {
-    width: 385,
-    height: 360,
     display: 'flex',
-    alignItems: "center",
     justifyContent: "space-around",
+    width: "100%",
+    height: "70%",
+    padding: 10,
+    gap: 10,
     marginTop: 10
   },
   invariantContentView: {
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
-
-    height: 210,
-    width: 385,
+    width: "100%",
+    height: "55%",
     padding: 15,
     borderRadius: 20,
     backgroundColor: "white",
@@ -198,15 +199,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     alignSelf: "center",
   },
-  datePickerButton: {
-    width: "100%",
-    padding: 5,
-    borderWidth: 1,
-    borderRadius: 3,
-    borderColor: "#004A8F",
-  },
   footerButton: {
-    width: 387,
     backgroundColor: "#004A8F"
   },
 });

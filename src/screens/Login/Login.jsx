@@ -4,7 +4,9 @@ import * as Google from 'expo-auth-session/providers/google';
 import * as WebBrowser from 'expo-web-browser';
 
 // ENVOIROMENT VARIABLES
-import { REACT_APP_GOOGLE_EXPO_CLIENT_ID, REACT_APP_GOOGLE_ANDROID_CLIENT_ID, REACT_APP_EMAIL_DOMAIN } from '@env';
+const REACT_APP_EMAIL_DOMAIN="@ccc.ufcg.edu.br"
+const REACT_APP_GOOGLE_EXPO_CLIENT_ID="55679260638-cfumf5qacpehgjevtv2id46ij70d6t2d.apps.googleusercontent.com"
+const REACT_APP_GOOGLE_ANDROID_CLIENT_ID="55679260638-u536a1pi7or0o5fgpudtsl0accctq5ot.apps.googleusercontent.com"
 
 // CONTEXT
 import { useAuth } from "../../context/AuthContext";
@@ -77,7 +79,6 @@ const LoginScreen = () => {
         disabled={!request}
         title={"Fazer login com o Google"}
         onPress={() => promptAsync({ 
-          projectNameForProxy: "@cilasmfm/computacaoufcg", //Remove in production
           useProxy: true, //Set to false in production
           showInRecents: true
         })} 

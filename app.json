@@ -5,12 +5,11 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
     "scheme": "com.ufcg.computacaoufcg",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#F1F3FF"
+      "backgroundColor": "#ffffff"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -19,18 +18,22 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ufcg.computacaoufcg"
     },
     "android": {
       "package": "com.ufcg.computacaoufcg",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/icon.png",
-        "backgroundColor": "#F1F3FF"
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
       }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "e77c50e1-6f33-42f2-a8dd-a3252fcb9123"
+        "projectId": "e004d583-991e-4ab1-82ad-783ddb958fa9"
       }
     }
   }

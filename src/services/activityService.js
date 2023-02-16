@@ -1,5 +1,5 @@
 import axios from "axios";
-import { REACT_APP_API_URI } from "@env";
+const REACT_APP_API_URI="http://150.165.15.9:8091"
 
 export async function registerActivity(activity) {
   try {
@@ -29,7 +29,11 @@ export async function fetchActivities(query, page, rowsPerPage, sort, order) {
       `${REACT_APP_API_URI}/activities/find_by_state?page=${page}&size=${rowsPerPage}&sort=${sort}&order=${order}`, query
     );
   } catch (error) {
-    console.error(error);
+    if (error.response.status === 404) {
+      return null;
+    } else {
+      console.error(error);
+    }
   }
 }
 

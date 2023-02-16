@@ -10,7 +10,6 @@ import { useAuth } from '../context/AuthContext';
 import DashboardScreen from '../screens/Dashboard/Dashboard';
 import ActivityRegisterScreen from '../screens/Activity/Register';
 import ActivitiesListScreen from '../screens/Activity/List';
-import UserGuide from '../screens/UserGuide/UserGuide';
 
 const { Navigator, Screen } = createDrawerNavigator();
 
@@ -39,9 +38,6 @@ export const PrivateRoutes = () => {
       drawerContent={props => <CustomDrawerContent {...props} />}
     >
       <Screen name="Atividades Complementares" component={DashboardScreen} />
-      <Screen name="User Guide" component={UserGuide}
-        options={{ drawerItemStyle: { display: 'none' } }}
-      />
       <Screen name="Activity Register" component={ActivityRegisterScreen}
         options={{ drawerItemStyle: { display: 'none' } }}
       />

@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { RefreshControl, ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -29,14 +29,19 @@ const ActivitiesListScreen = () => {
       initialPageConfiguration.sortOrder
     );
 
-    setActivities(result.data.activities);
+    if (result)
+      setActivities(result.data.activities);
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      loadData();
-    }, [])
-  );
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     loadData();
+  //   }, [])
+  // );
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -57,6 +62,7 @@ const ActivitiesListScreen = () => {
 
       <SafeAreaView style={styles.safeAreaView}>
         <ScrollView
+          style={styles.scrollAreaView}
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
@@ -69,10 +75,10 @@ const ActivitiesListScreen = () => {
               key={i}
               tableHeader={['Tipo de atividade', 'Descrição Ativade', 'Período', 'Créditos', 'Comprovação']}
               tableContent={[
-                act.kind, 
-                act.description, 
-                `${act.workload} ${act.workload_unity}`, 
-                act.computed_credits, 
+                act.kind,
+                act.description,
+                `${act.workload} ${act.workload_unity}`,
+                act.computed_credits,
                 act.voucher_path.split("/")[2]
               ]}
               activityStatus={act.state}
@@ -92,6 +98,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: "center",
     justifyContent: "center",
+    padding: 5,
   },
   mainTitle: {
     padding: 5,
@@ -100,9 +107,13 @@ const styles = StyleSheet.create({
     color: "#004A8F",
   },
   safeAreaView: {
-    width: 385,
-    height: 400,
-    marginTop: 10
+    maxHeight: "70%",
+  },
+  scrollAreaView: {
+    height: "100%",
+    padding: 10,
+    backgroundColor: "#80B6CE",
+    borderRadius: 10,
   },
 });
 

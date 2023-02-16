@@ -12,10 +12,12 @@ curl -s https://deb.nodesource.com/setup_16.x | sudo bash
 sudo apt install nodejs -y
 sudo apt-get update 
 npm install --global yarn
+npm install -g npm@9.5.0
 ```
 
 ## Instale as ferramentas do expo
 ```
+sudo apt install git -y
 sudo npm install -g expo-cli 
 sudo npm install -g eas-cli
 ```
@@ -25,10 +27,12 @@ sudo npm install -g eas-cli
 npx expo-cli doctor
 ```
 
+npx expo prebuild
+
 ## Build do aplicativo
 * Desenvolvimento
 ```
-eas build -p android --profile development
+eas build -p android --profile preview
 ```
 
 ## Execução do aplicativo

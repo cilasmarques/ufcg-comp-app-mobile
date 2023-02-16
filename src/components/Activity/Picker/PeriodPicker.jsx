@@ -165,9 +165,8 @@ const styles = StyleSheet.create({
   variantContentView: {
     display: "flex",
     justifyContent: "space-around",
-    height: 125,
-    width: 385,
     padding: 15,
+    marginTop: 10,
     marginBottom: 10,
     borderRadius: 20,
     backgroundColor: "white",

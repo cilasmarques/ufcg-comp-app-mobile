@@ -25,11 +25,9 @@ const ActivityInfoCard = ({ tableHeader, tableContent, activityStatus, activityJ
           <Row
             data={tableHeader}
             style={styles.tableHead}
-            textStyle={styles.tableText}
           />
           <Rows
             data={[tableContent]}
-            textStyle={styles.tableText}
           />
         </Table>
       </View>
@@ -53,7 +51,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   }),
   tableContainerView: status => ({
-    width: 380,
+    minWidth: "100%",
     padding: 15,
     borderRadius: 10,
     backgroundColor: "white",
