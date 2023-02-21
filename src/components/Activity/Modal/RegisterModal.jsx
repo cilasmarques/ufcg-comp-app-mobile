@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Modal, Alert } from "react-native";
+import { View, Text, Modal, Alert } from "react-native";
 import { Button } from "native-base";
 
 // COMPONENTS
@@ -8,7 +8,10 @@ import ActivityInfoCard from "../Card/InfoCard";
 import { useAuth } from "../../../context/AuthContext";
 
 // SERVICE
-import { registerActivity } from "../../../services/activityService";
+import { registerActivity } from "../../../services/ActivityService";
+
+// STYLES
+import styles from "./styles.registerModal";
 
 const ActivityRegisterModal = ({ clearData, openModal, setOpenModal, activityKind, activityDescription, activityPeriod, activityVoucher }) => {
   const { user } = useAuth();
@@ -70,46 +73,5 @@ const ActivityRegisterModal = ({ clearData, openModal, setOpenModal, activityKin
     </Modal>
   )
 };
-
-const styles = StyleSheet.create({
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22
-  },
-  modalView: {
-    display: "flex",
-    justifyContent: "space-around",
-    width: 400,
-    minHeight: 500,
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center"
-  },
-  modalTitle: {
-    fontSize: 20,
-    marginBottom: 15,
-    textAlign: "center"
-  },
-  footerButton: {
-    width: 387,
-    backgroundColor: "#004A8F"
-  },
-});
 
 export default ActivityRegisterModal;

@@ -1,13 +1,19 @@
 import { useCallback, useEffect, useState } from "react";
-import { View, StyleSheet, TouchableOpacity, Alert } from "react-native";
-import { NativeBaseProvider, Select, TextArea, Button, Text } from "native-base";
+import { View, Alert } from "react-native";
+import { NativeBaseProvider, Select, TextArea, Text } from "native-base";
 import { useFocusEffect } from '@react-navigation/native';
 import * as DocumentPicker from 'expo-document-picker';
 
 // COMPONENTS
-import ActivityPeriodPicker from "../../components/Activity/Picker/PeriodPicker";
-import ActivityRegisterModal from "../../components/Activity/Modal/RegisterModal";
-import { fetchActivitiesMetrics } from "../../services/activityService";
+import Button from "../../../components/General/Button/Button";
+import ActivityPeriodPicker from "../../../components/Activity/Picker/PeriodPicker";
+import ActivityRegisterModal from "../../../components/Activity/Modal/RegisterModal";
+
+// SERVICES
+import { fetchActivitiesMetrics } from "../../../services/ActivityService";
+
+// STYLES
+import styles from "./styles.register";
 
 const ActivityRegisterScreen = () => {
   const [activityPeriod, setActivityPeriod] = useState(null);
@@ -35,7 +41,7 @@ const ActivityRegisterScreen = () => {
     const loadData = async () => {
       const response = await fetchActivitiesMetrics();
       setDBActMetricsInfo(response.data.metrics_info);
-     }
+    }
     loadData();
   }, [])
 
@@ -59,6 +65,10 @@ const ActivityRegisterScreen = () => {
   };
 
   const handleFinishRegister = async () => {
+    console.log(activityPeriod)
+    console.log(activityMetrics)
+    console.log(activityDescription)
+    console.log(activityVoucher)
     if (activityPeriod.fullPeriod && activityMetrics && activityDescription && activityVoucher) {
       setOpenModal(true);
     }
@@ -84,15 +94,11 @@ const ActivityRegisterScreen = () => {
           <View style={styles.invariantContentView}>
             <Select
               placeholder="Tipo de atividade"
-              selectedValue={activityMetrics ? activityMetrics.kind : ""}
               onValueChange={handleSetActivityKind}
+              selectedValue={activityMetrics ? activityMetrics.kind : ""}
             >
               {DBActMetricsInfo.map((activity, index) =>
-                <Select.Item
-                  key={index}
-                  label={activity.kind}
-                  value={activity.kind}
-                />
+                <Select.Item key={index} label={activity.kind} value={activity.kind} />
               )}
             </Select>
 
@@ -103,12 +109,12 @@ const ActivityRegisterScreen = () => {
               onChangeText={handleSetDescription}
             />
 
-            <View style={styles.documentPickerView}>
-              <TouchableOpacity style={styles.documentPickerButton} onPress={handlePickDocument}>
-                <Text style={styles.documentPickerButtonText}> Selecionar documento</Text>
-              </TouchableOpacity>
-              <Text width="50%" padding="2px"> {activityVoucher?.name} </Text>
-            </View>
+            <Button
+              onPress={handlePickDocument}
+              title="Selecionar documento"
+              filename={activityVoucher?.name}
+              variant='documentPicker'
+            />
           </View>
 
           <ActivityPeriodPicker
@@ -119,11 +125,9 @@ const ActivityRegisterScreen = () => {
         </View>
 
         <Button
-          style={styles.footerButton}
           onPress={handleFinishRegister}
-        >
-          Registrar Atividade
-        </Button>
+          title="Registrar Atividade"
+        />
       </View>
 
       <ActivityRegisterModal
@@ -138,70 +142,5 @@ const ActivityRegisterScreen = () => {
     </NativeBaseProvider>
   )
 };
-
-const styles = StyleSheet.create({
-  mainContainer: {
-    height: '100%',
-    display: 'flex',
-    alignItems: "center",
-    justifyContent: "center",
-    //center the content horizontally
-  },
-  mainTitle: {
-    padding: 5,
-    fontSize: 26,
-    fontWeight: "bold",
-    color: "#004A8F",
-  },
-  registerBoxView: {
-    display: 'flex',
-    justifyContent: "space-around",
-    width: "100%",
-    height: "70%",
-    padding: 10,
-    gap: 10,
-    marginTop: 10
-  },
-  invariantContentView: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-    width: "100%",
-    height: "55%",
-    padding: 15,
-    borderRadius: 20,
-    backgroundColor: "white",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5
-  },
-  documentPickerView: {
-    display: 'flex',
-    textAlign: "center",
-    alignItems: "center",
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  documentPickerButton: {
-    width: "45%",
-    padding: 5,
-    borderWidth: 1,
-    borderRadius: 3,
-    borderColor: "#004A8F",
-  },
-  documentPickerButtonText: {
-    color: "#004A8F",
-    fontWeight: "bold",
-    alignSelf: "center",
-  },
-  footerButton: {
-    backgroundColor: "#004A8F"
-  },
-});
 
 export default ActivityRegisterScreen;

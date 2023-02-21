@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { format } from 'date-fns'
-import { View, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import { View, TouchableOpacity, Alert } from "react-native";
 import { Select, Text, Input } from "native-base";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
+
+// STYLES
+import styles from "./styles.periodPicker";
 
 const ACTIVITY_UNITY_EVENT = ["-"];
 const ACTIVITY_UNITY_SEMESTER = ["semestre(s)"];
@@ -18,6 +21,7 @@ const ActivityPeriodPicker = ({ period, setPeriod, activityUnity }) => {
   };
 
   const computeDateWorkload = (endDate, startDate) => {
+    console.log("activityUnity: ", activityUnity)
     if (activityUnity === "meses") {
       if (endDate && startDate) {
         const nextDay = new Date(endDate.getTime() + (24 * 60 * 60 * 1000));
@@ -37,8 +41,8 @@ const ActivityPeriodPicker = ({ period, setPeriod, activityUnity }) => {
       if (endDate && startDate) {
         const nextDay = new Date(endDate.getTime() + (24 * 60 * 60 * 1000));
         let years = (nextDay.getFullYear() - startDate.getFullYear());
-
-        if (workload < 1) {
+        
+        if (years < 1) {
           Alert.alert(" Periodo inválido", "O período de participação mínimo para o aproveitamento de atividades dessa natureza é de 1 ano");
           return;
         } else {
@@ -56,16 +60,24 @@ const ActivityPeriodPicker = ({ period, setPeriod, activityUnity }) => {
     const endDate = finalDate !== null ? new Date(finalDate) : period?.endDate;
     setPeriod({...period, startDate: startDate, endDate: endDate});
 
-    if (endDate && startDate) {
-      if (endDate < startDate) {
-        Alert.alert("A data de início precisa ser menor que a data de término");
-        return;
-      } 
+    console.log("startDate: ", startDate)
+    console.log("endDate: ", endDate)
+    console.log("Teste: ", startDate && endDate)
 
-      const workload = computeDateWorkload(endDate, startDate);
+    // check if both dates are set
+    if (startDate && endDate) {
+      console.log('entrou')
+      // if (endDate < startDate) {
+      //   Alert.alert("A data de início precisa ser menor que a data de término");
+      //   return;
+      // } 
+
+      const workload = computeDateWorkload(new Date(endDate), new Date(startDate));
+      console.log("workload: ", workload)
       if (workload) {
         const periodString = `De ${format(startDate, 'dd/MM/yyyy')} a ${format(endDate, 'dd/MM/yyyy')} (${workload} ${activityUnity})`;
-  
+        console.log("periodString: ", periodString)
+        
         setPeriod({
           workload: workload,
           startDate: startDate,
@@ -160,45 +172,5 @@ const ActivityPeriodPicker = ({ period, setPeriod, activityUnity }) => {
     </View>
   )
 };
-
-const styles = StyleSheet.create({
-  variantContentView: {
-    display: "flex",
-    justifyContent: "space-around",
-    padding: 15,
-    marginTop: 10,
-    marginBottom: 10,
-    borderRadius: 20,
-    backgroundColor: "white",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5
-  },
-  datePickerButton: {
-    width: "100%",
-    padding: 5,
-    borderWidth: 1,
-    borderRadius: 3,
-    borderColor: "#004A8F",
-  },
-  datePickerButtonText: {
-    color: "#004A8F",
-    fontWeight: "bold",
-    alignSelf: "center",
-  },
-  input: {
-    minHeight: 50,
-    minWidth: 200,
-    margin: 12,
-    borderWidth: 1,
-    borderRadius: 10,
-    textAlign: "center"
-  },
-});
 
 export default ActivityPeriodPicker;

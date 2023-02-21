@@ -1,17 +1,19 @@
-import { useCallback, useEffect, useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { useEffect, useState } from "react";
+import { View, Text } from "react-native";
 import { RefreshControl, ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useFocusEffect } from "@react-navigation/native";
 
 // COMPONENTS
-import ActivityInfoCard from "../../components/Activity/Card/InfoCard";
+import ActivityInfoCard from "../../../components/Activity/Card/InfoCard";
 
 // CONTEXT
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../../context/AuthContext";
 
 //SERVICES
-import { fetchActivities } from '../../services/activityService'
+import { fetchActivities } from '../../../services/ActivityService'
+
+// STYLES
+import styles from "./styles.list";
 
 const ActivitiesListScreen = () => {
   const initialPageConfiguration = { page: 0, size: 1000, sortField: 'id', sortOrder: 'asc' };
@@ -19,6 +21,18 @@ const ActivitiesListScreen = () => {
   const { user } = useAuth();
   const [activities, setActivities] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    loadData();
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 1000);
+  };
 
   const loadData = async () => {
     const result = await fetchActivities(
@@ -33,32 +47,15 @@ const ActivitiesListScreen = () => {
       setActivities(result.data.activities);
   };
 
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     loadData();
-  //   }, [])
-  // );
-
-  const onRefresh = () => {
-    setRefreshing(true);
-    loadData();
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 1000);
-  }
-
   return (
     <View style={styles.mainContainer}>
       <Text style={styles.mainTitle}>
         Atividades Registradas
       </Text>
 
-      {activities?.length === 0 && <Text style={{ marginTop: 10 }}>Nenhuma atividade registrada</Text>}
-      {activities?.length > 0 && <Text style={{ marginTop: 10 }}>Você possui {activities?.length} atividades registradas</Text>}
+      <Text style={{ marginTop: 10 }}>
+        {activities?.length > 0 ? `Você possui ${activities?.length} atividades registradas` : 'Nenhuma atividade registrada'}
+      </Text>
 
       <SafeAreaView style={styles.safeAreaView}>
         <ScrollView
@@ -77,7 +74,7 @@ const ActivitiesListScreen = () => {
               tableContent={[
                 act.kind,
                 act.description,
-                `${act.workload} ${act.workload_unity}`,
+                `${act.workload} ${act.workload_unity}`, //TODO adicionar fullPeriod no BD?
                 act.computed_credits,
                 act.voucher_path.split("/")[2]
               ]}
@@ -91,30 +88,5 @@ const ActivitiesListScreen = () => {
     </View >
   )
 };
-
-const styles = StyleSheet.create({
-  mainContainer: {
-    height: '100%',
-    display: 'flex',
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 5,
-  },
-  mainTitle: {
-    padding: 5,
-    fontSize: 26,
-    fontWeight: "bold",
-    color: "#004A8F",
-  },
-  safeAreaView: {
-    maxHeight: "70%",
-  },
-  scrollAreaView: {
-    height: "100%",
-    padding: 10,
-    backgroundColor: "#80B6CE",
-    borderRadius: 10,
-  },
-});
 
 export default ActivitiesListScreen;

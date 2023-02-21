@@ -7,14 +7,13 @@ import {
 
 import { useAuth } from '../context/AuthContext';
 
-import DashboardScreen from '../screens/Dashboard/Dashboard';
-import ActivityRegisterScreen from '../screens/Activity/Register';
-import ActivitiesListScreen from '../screens/Activity/List';
+import DashboardScreen from '../screens/Activity/Dashboard/Dashboard';
+import ActivityRegisterScreen from '../screens/Activity/Register/Register';
+import ActivitiesListScreen from '../screens/Activity/List/List';
 
 const { Navigator, Screen } = createDrawerNavigator();
 
 export const PrivateRoutes = () => {
-  const { user } = useAuth();
   const { handleLogout } = useAuth();
 
   function CustomDrawerContent(props) {
