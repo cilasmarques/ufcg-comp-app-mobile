@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "computacaoufcg",
+    "name": "Computação@UFCG",
     "slug": "computacaoufcg",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -9,7 +9,7 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#F1F3FF"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -24,12 +24,9 @@
     "android": {
       "package": "com.ufcg.computacaoufcg",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#FFFFFF"
       }
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
