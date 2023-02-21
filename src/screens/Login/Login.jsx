@@ -1,10 +1,9 @@
 import { useEffect } from 'react';
-import { StyleSheet, View, Button, Text, Alert } from "react-native"
+import { View, Button, Text, Alert } from "react-native"
 import * as Google from 'expo-auth-session/providers/google';
 import * as WebBrowser from 'expo-web-browser';
 
 // ENVOIROMENT VARIABLES
-const REACT_APP_EMAIL_DOMAIN="@ccc.ufcg.edu.br"
 const REACT_APP_GOOGLE_EXPO_CLIENT_ID="55679260638-cfumf5qacpehgjevtv2id46ij70d6t2d.apps.googleusercontent.com"
 const REACT_APP_GOOGLE_ANDROID_CLIENT_ID="55679260638-u536a1pi7or0o5fgpudtsl0accctq5ot.apps.googleusercontent.com"
 
@@ -12,7 +11,10 @@ const REACT_APP_GOOGLE_ANDROID_CLIENT_ID="55679260638-u536a1pi7or0o5fgpudtsl0acc
 import { useAuth } from "../../context/AuthContext";
 
 // SERVICES
-import { fetchUserByEmail, registerUser } from '../../services/userService';
+import { authStudent } from '../../services/AuthService';
+
+// STYLES
+import styles from "./styles.login";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -32,44 +34,15 @@ const LoginScreen = () => {
   }, [response]);
 
   const handleAuthUser = async (authentication) => {
-    const response = await fetch(Google.discovery.userInfoEndpoint, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        Authorization: `Bearer ${authentication.accessToken}`,
-        'Content-Type': 'application/json'
-      },
-    });
-    
-    const userCredentials = await response.json();
-    const emailRegex = new RegExp(`[a-z0-9.]+${REACT_APP_EMAIL_DOMAIN}`);
-
-    if (emailRegex.test(userCredentials.email)) {
-      const response = await fetchUserByEmail(userCredentials.email);
-      if (response?.status === 200) {
-        const userData = response.data.user;
-        handleAuthSuccess(authentication, userData);
-      } else {
-        handleRegisterUser(authentication, userCredentials);
-      }
-    } else {
-      Alert.alert("Email inválido");
-    }
-  };
-
-  const handleRegisterUser = async (authentication, userCredentials) => {
-    const userData = {
-      "name": userCredentials.name,
-      "email": userCredentials.email,
-      "role": "student",
-    };
-
-    const response = await registerUser(userData);
+    const response = await authStudent(authentication);
+    console.log(response)
     if (response?.status === 200) {
+      const userData = response.data.user;
       handleAuthSuccess(authentication, userData);
     } else {
-      Alert.alert("Falha ao autenticar o usuário");
-    }
+      Alert.alert("Email inválido");
+      handleAuthFailure();
+   }
   };
 
   return (
@@ -79,25 +52,12 @@ const LoginScreen = () => {
         disabled={!request}
         title={"Fazer login com o Google"}
         onPress={() => promptAsync({ 
-          useProxy: true, //Set to false in production
+          useProxy: false, //Set to false in production
           showInRecents: true
         })} 
       />
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    height: '100%',
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  title: {
-    fontSize: 25,
-    color: "#004A8F",
-  },
-});
 
 export default LoginScreen;
