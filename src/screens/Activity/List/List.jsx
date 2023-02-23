@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback, useState } from "react";
 import { View, Text, ActivityIndicator, FlatList } from "react-native";
-import { RefreshControl, ScrollView } from "react-native-gesture-handler";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { RefreshControl } from "react-native-gesture-handler";
 
 // COMPONENTS
 import ActivityInfoCard from "../../../components/Activity/Card/InfoCard";
@@ -22,9 +22,11 @@ const ActivitiesListScreen = () => {
   const [activities, setActivities] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => {
-    loadData();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      loadData();
+    }, [])
+  );
 
   const onRefresh = () => {
     loadData();
@@ -67,8 +69,8 @@ const ActivitiesListScreen = () => {
               tableContent={[
                 item.kind,
                 item.description,
-                `${item.workload} ${item.workload_unity}`,
-                item.computed_credits,
+                item.workload ? `${item.workload} ${item.workload_unity}` : '-',
+                item.computed_credits ? item.computed_credits : '-',
                 item.voucher_path.split("/")[2]
               ]}
               activityStatus={item.state}

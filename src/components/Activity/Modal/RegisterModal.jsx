@@ -65,7 +65,12 @@ const ActivityRegisterModal = ({ clearData, openModal, setOpenModal, activityKin
           <Text style={styles.modalText}>Por favor, verifique as informações antes de finalizar.</Text>
           <ActivityInfoCard
             tableHeader={['Tipo de atividade', 'Descrição Ativade', 'Período', 'Comprovação']}
-            tableContent={[activityKind, activityDescription, activityPeriod?.fullPeriod, activityVoucher?.name]}
+            tableContent={[
+              activityKind, 
+              activityDescription, 
+              activityPeriod ? activityPeriod.fullPeriod : '-' , 
+              activityVoucher?.name
+            ]}
             activityStatus={ACTIVITY_STATE_CREATED}
             activityJustify={null}
             activityUpdatedTime={new Date()}

@@ -38,6 +38,7 @@ const styles = StyleSheet.create({
     borderColor: '#C1C0B9'
   },
   tableText: {
+    textAlign: "center",
     padding: 5
   },
 });

@@ -22,7 +22,7 @@ const ActivityInfoCard = ({ tableModalContainer, tableHeader, tableContent, acti
       <View style={styles.tableContainerView(activityStatus)}>
         <Table borderStyle={styles.tableBorder} style={styles.tableContainer(tableModalContainer)}>
           <Row data={tableHeader} textStyle={styles.tableText}/>
-          <Rows data={[tableContent]} textStyle={styles}/>
+          <Rows data={[tableContent]} textStyle={styles.tableText}/>
         </Table>
       </View>
       <Text style={styles.activityInfoText}>
