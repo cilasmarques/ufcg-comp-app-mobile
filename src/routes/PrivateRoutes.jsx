@@ -4,23 +4,38 @@ import {
   DrawerItemList,
   DrawerItem,
 } from '@react-navigation/drawer';
+import { Image, ImageBackground, Text, View } from 'react-native';
 
+// CONTEXT
 import { useAuth } from '../context/AuthContext';
 
+// SCREENS
 import DashboardScreen from '../screens/Activity/Dashboard/Dashboard';
 import ActivityRegisterScreen from '../screens/Activity/Register/Register';
 import ActivitiesListScreen from '../screens/Activity/List/List';
 
+// STYLES
+import styles from "./styles.router";
+
 const { Navigator, Screen } = createDrawerNavigator();
 
 export const PrivateRoutes = () => {
-  const { handleLogout } = useAuth();
+  const { handleLogout, user } = useAuth();
 
   function CustomDrawerContent(props) {
     return (
-      <DrawerContentScrollView {...props} style={{ marginTop: 25, borderRadius: 5 }}>
-        <DrawerItemList {...props} />
-        <DrawerItem label="Sair" onPress={handleLogout} />
+      <DrawerContentScrollView contentContainerStyle={styles.drawerContainer} {...props}>
+        <Text style={styles.mainTitle}> COMPUTAÇÃO@UFCG </Text>
+
+        <ImageBackground style={styles.imageBackgroundContainer}>
+          <Image style={styles.image} source={{ uri: user?.picture }} />
+          <Text style={styles.userData} >Olá, {user?.name}</Text>
+        </ImageBackground>
+
+        <View style={styles.itemsContainer}>
+          <DrawerItemList {...props} />
+          <DrawerItem label="Sair" onPress={handleLogout} />
+        </View>
       </DrawerContentScrollView>
     );
   };
@@ -28,12 +43,11 @@ export const PrivateRoutes = () => {
   return (
     <Navigator
       screenOptions={{
-        headerTitle: "",
+        headerTitle: "", //Maybe remove this line
         headerTintColor: '#FFFFFF',
-        headerStyle: {
-          backgroundColor: "#004A8F"
-        }
+        headerStyle: { backgroundColor: "#004A8F" }
       }}
+      initialRouteName="Atividades Complementares"
       drawerContent={props => <CustomDrawerContent {...props} />}
     >
       <Screen name="Atividades Complementares" component={DashboardScreen} />
