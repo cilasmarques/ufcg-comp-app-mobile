@@ -12,7 +12,7 @@ import ProcessRegisterModal from "../../../components/Process/Modal/RegisterModa
 import { useAuth } from "../../../context/AuthContext";
 
 // SERVICES
-import { BASE_URL, ENDPOINT_GUIDE_ACTIVITIES } from "../../../services";
+import { API_BASE_URL, API_ENDPOINT_GUIDE_ACTIVITIES } from "../../../services";
 import { fetchActivitiesComputedCredits } from "../../../services/ActivityService";
 
 // STYLES
@@ -62,7 +62,7 @@ const DashboardScreen = () => {
   }
 
   const handleRedirectToUserGuide = async () => {
-    const userGuideUrl = `${BASE_URL}/${ENDPOINT_GUIDE_ACTIVITIES}`;
+    const userGuideUrl = `${API_BASE_URL}/${API_ENDPOINT_GUIDE_ACTIVITIES}`;
     const supported = await Linking.canOpenURL(userGuideUrl);
     if (supported) {
       await Linking.openURL(userGuideUrl);
