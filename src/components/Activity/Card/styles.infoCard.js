@@ -1,10 +1,14 @@
 import { StyleSheet } from "react-native"
 
+// CONSTANTS
+import { ACTIVITY_STATE_APPROVED, ACTIVITY_STATE_REJECTED } from "../../../utils/constants";
+
 const styles = StyleSheet.create({
   activityContainerView: status => ({
-    backgroundColor: (status === "APPROVED") ? "#368C72" : (status === "REJECTED") ? "#8C3636" : "black",
+    backgroundColor: (status === ACTIVITY_STATE_APPROVED) ? "#368C72" : (status === ACTIVITY_STATE_REJECTED) ? "#8C3636" : "black",
     borderRadius: 10,
     marginBottom: 10,
+    
     alignItems: "center",
   }),
   tableContainerView: status => ({
@@ -12,7 +16,7 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     backgroundColor: "white",
-    borderColor: (status === "APPROVED") ? "#368C72" : (status === "REJECTED") ? "#8C3636" : "black",
+    borderColor: (status === ACTIVITY_STATE_APPROVED) ? "#368C72" : (status === ACTIVITY_STATE_REJECTED) ? "#8C3636" : "black",
     borderWidth: 3,
   }),
   activityInfoText: {

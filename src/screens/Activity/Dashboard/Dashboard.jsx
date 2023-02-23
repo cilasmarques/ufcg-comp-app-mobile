@@ -63,7 +63,6 @@ const DashboardScreen = () => {
 
   const handleRedirectToUserGuide = async () => {
     const userGuideUrl = `${BASE_URL}/${ENDPOINT_GUIDE_ACTIVITIES}`;
-    console.log(userGuideUrl)
     const supported = await Linking.canOpenURL(userGuideUrl);
     if (supported) {
       await Linking.openURL(userGuideUrl);

@@ -4,13 +4,11 @@ import { View, TouchableOpacity, Alert } from "react-native";
 import { Select, Text, Input } from "native-base";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 
+// CONSTANTS
+import { ACTIVITY_UNITY_CALENDAR, ACTIVITY_UNITY_EVENT, ACTIVITY_UNITY_RUNNING_TIME, ACTIVITY_UNITY_SEMESTER } from "../../../utils/constants";
+
 // STYLES
 import styles from "./styles.periodPicker";
-
-const ACTIVITY_UNITY_EVENT = ["-"];
-const ACTIVITY_UNITY_SEMESTER = ["semestre(s)"];
-const ACTIVITY_UNITY_RUNNING_TIME = ["hora(s)"];
-const ACTIVITY_UNITY_CALENDAR = ["meses", "ano(s)"];
 
 const ActivityPeriodPicker = ({ period, setPeriod, activityUnity }) => {
   const [openInitialDatePicker, setOpenInitialDatePicker] = useState(false);
@@ -21,7 +19,6 @@ const ActivityPeriodPicker = ({ period, setPeriod, activityUnity }) => {
   };
 
   const computeDateWorkload = (endDate, startDate) => {
-    console.log("activityUnity: ", activityUnity)
     if (activityUnity === "meses") {
       if (endDate && startDate) {
         const nextDay = new Date(endDate.getTime() + (24 * 60 * 60 * 1000));
@@ -41,7 +38,7 @@ const ActivityPeriodPicker = ({ period, setPeriod, activityUnity }) => {
       if (endDate && startDate) {
         const nextDay = new Date(endDate.getTime() + (24 * 60 * 60 * 1000));
         let years = (nextDay.getFullYear() - startDate.getFullYear());
-        
+
         if (years < 1) {
           Alert.alert(" Periodo inválido", "O período de participação mínimo para o aproveitamento de atividades dessa natureza é de 1 ano");
           return;
@@ -58,26 +55,17 @@ const ActivityPeriodPicker = ({ period, setPeriod, activityUnity }) => {
 
     const startDate = initialDate !== null ? new Date(initialDate) : period?.startDate;
     const endDate = finalDate !== null ? new Date(finalDate) : period?.endDate;
-    setPeriod({...period, startDate: startDate, endDate: endDate});
+    setPeriod({ ...period, startDate: startDate, endDate: endDate });
 
-    console.log("startDate: ", startDate)
-    console.log("endDate: ", endDate)
-    console.log("Teste: ", startDate && endDate)
-
-    // check if both dates are set
     if (startDate && endDate) {
-      console.log('entrou')
-      // if (endDate < startDate) {
-      //   Alert.alert("A data de início precisa ser menor que a data de término");
-      //   return;
-      // } 
+      if (endDate < startDate) {
+        Alert.alert("A data de início precisa ser menor que a data de término");
+        return;
+      }
 
       const workload = computeDateWorkload(new Date(endDate), new Date(startDate));
-      console.log("workload: ", workload)
       if (workload) {
         const periodString = `De ${format(startDate, 'dd/MM/yyyy')} a ${format(endDate, 'dd/MM/yyyy')} (${workload} ${activityUnity})`;
-        console.log("periodString: ", periodString)
-        
         setPeriod({
           workload: workload,
           startDate: startDate,

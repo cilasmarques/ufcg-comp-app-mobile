@@ -1,8 +1,12 @@
-import { View, Text, Modal, Alert } from "react-native";
+import { useState } from "react";
 import { Button } from "native-base";
+import { View, Text, Modal, Alert, ActivityIndicator } from "react-native";
 
 // COMPONENTS
 import ActivityInfoCard from "../Card/InfoCard";
+
+// CONSTANTS
+import { ACTIVITY_STATE_CREATED } from "../../../utils/constants";
 
 // CONTEXT
 import { useAuth } from "../../../context/AuthContext";
@@ -15,6 +19,8 @@ import styles from "./styles.registerModal";
 
 const ActivityRegisterModal = ({ clearData, openModal, setOpenModal, activityKind, activityDescription, activityPeriod, activityVoucher }) => {
   const { user } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
+
 
   const handleSubmitActivity = async () => {
     const data = new FormData();
@@ -28,17 +34,19 @@ const ActivityRegisterModal = ({ clearData, openModal, setOpenModal, activityKin
     });
 
     activityPeriod?.workload && data.append('workload', activityPeriod.workload);
-    activityPeriod?.startDate && data.append('start_date',new Date(activityPeriod.startDate).toISOString());
+    activityPeriod?.startDate && data.append('start_date', new Date(activityPeriod.startDate).toISOString());
     activityPeriod?.endDate && data.append('end_date', new Date(activityPeriod.endDate).toISOString());
 
+    setIsLoading(true);
     const response = await registerActivity(data);
-    if (response.status === 200) {
+    if (response?.status === 200) {
       clearData();
       Alert.alert("Atividade registrada com sucesso");
     } else {
-      Alert.alert("Erro ao registrar atividade. Por favor, tente novamente");
+      Alert.alert("Erro ao registrar a atividade", "Por favor, verifique os campos e tente novamente");
     }
 
+    setIsLoading(false);
     setOpenModal(false);
   };
 
@@ -58,16 +66,19 @@ const ActivityRegisterModal = ({ clearData, openModal, setOpenModal, activityKin
           <ActivityInfoCard
             tableHeader={['Tipo de atividade', 'Descrição Ativade', 'Período', 'Comprovação']}
             tableContent={[activityKind, activityDescription, activityPeriod?.fullPeriod, activityVoucher?.name]}
-            activityStatus={'CREATED'}
+            activityStatus={ACTIVITY_STATE_CREATED}
             activityJustify={null}
             activityUpdatedTime={new Date()}
           />
-          <Button
-            style={styles.footerButton}
-            onPress={handleSubmitActivity}
-          >
-            Finalizar
-          </Button>
+
+          {isLoading ?
+            <ActivityIndicator size="large" color="#004A8F" /> :
+            <Button
+              style={styles.footerButton}
+              onPress={handleSubmitActivity}
+            >
+              Finalizar
+            </Button>}
         </View>
       </View>
     </Modal>
