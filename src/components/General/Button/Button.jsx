@@ -12,10 +12,7 @@ const Button = (props) => {
           <TouchableOpacity style={styles.documentPickerButton} onPress={props.onPress}>
             <Text style={styles.documentPickerButtonText}>{props.title || 'Selecione um documento'}</Text>
           </TouchableOpacity>
-          {/* wrap the filename text field to not overflow the screen */}
-          <Text
-          style={styles.documentPickerFileName}
-          > {props.filename} </Text>
+          <Text style={styles.documentPickerFileName}>{props.filename}</Text>
         </View>
       );
     default:

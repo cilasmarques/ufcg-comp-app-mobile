@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { View, Text } from "react-native";
+import { View, Text, ActivityIndicator, FlatList } from "react-native";
 import { RefreshControl, ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -27,7 +27,6 @@ const ActivitiesListScreen = () => {
   }, []);
 
   const onRefresh = () => {
-    setRefreshing(true);
     loadData();
     setTimeout(() => {
       setRefreshing(false);
@@ -57,34 +56,29 @@ const ActivitiesListScreen = () => {
         {activities?.length > 0 ? `Você possui ${activities?.length} atividades registradas` : 'Nenhuma atividade registrada'}
       </Text>
 
-      <SafeAreaView style={styles.safeAreaView}>
-        <ScrollView
-          style={styles.scrollAreaView}
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-            />
-          }
-        >
-          {activities?.map((act, i) => (
+      {activities ?
+        <FlatList
+          style={styles.safeAreaView}
+          data={activities}
+          keyExtractor={item => item.id.toString()}
+          renderItem={({ item }) => (
             <ActivityInfoCard
-              key={i}
               tableHeader={['Tipo de atividade', 'Descrição Ativade', 'Período', 'Créditos', 'Comprovação']}
               tableContent={[
-                act.kind,
-                act.description,
-                `${act.workload} ${act.workload_unity}`, //TODO adicionar fullPeriod no BD?
-                act.computed_credits,
-                act.voucher_path.split("/")[2]
+                item.kind,
+                item.description,
+                `${item.workload} ${item.workload_unity}`,
+                item.computed_credits,
+                item.voucher_path.split("/")[2]
               ]}
-              activityStatus={act.state}
-              activityJustify={act.justify}
-              activityUpdatedTime={act.updated_time}
+              activityStatus={item.state}
+              activityJustify={item.justify}
+              activityUpdatedTime={item.updated_time}
             />
-          ))}
-        </ScrollView>
-      </SafeAreaView>
+          )}
+        /> :
+        <ActivityIndicator size="large" color="#004A8F" />
+      }
     </View >
   )
 };

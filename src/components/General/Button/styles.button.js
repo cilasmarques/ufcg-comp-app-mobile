@@ -39,15 +39,15 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     alignSelf: "center",
   },
-    // wrap the filename text field to not overflow the screen 
   documentPickerFileName: {
-    width: "50%",
+    width: "52%",
     maxHeight: 70,
     padding: 5,
     borderWidth: 1,
     borderRadius: 3,
     borderColor: "#004A8F",
     overflow: "hidden",
+    fontSize: 12,
   },
 });
 

@@ -18,10 +18,9 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: "space-around",
     width: "100%",
-    height: "70%",
+    height: 420,
     padding: 10,
     gap: 10,
-    marginTop: 10
   },
   invariantContentView: {
     display: "flex",
@@ -41,7 +40,6 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5
   },
-
   footerButton: {
     backgroundColor: "#004A8F"
   },

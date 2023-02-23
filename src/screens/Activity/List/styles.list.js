@@ -15,13 +15,8 @@ const styles = StyleSheet.create({
     color: "#004A8F",
   },
   safeAreaView: {
+    marginTop: 5,
     maxHeight: "70%",
-  },
-  scrollAreaView: {
-    height: "100%",
-    padding: 10,
-    backgroundColor: "#80B6CE",
-    borderRadius: 10,
   },
 });
 
