@@ -74,8 +74,15 @@ const ActivitiesListScreen = () => {
               activityStatus={item.state}
               activityJustify={item.justify}
               activityUpdatedTime={item.updated_time}
+              tableModalContainer={false}
             />
           )}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+            />
+          }
         /> :
         <ActivityIndicator size="large" color="#004A8F" />
       }
