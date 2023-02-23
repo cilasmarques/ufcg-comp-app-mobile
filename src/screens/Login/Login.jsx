@@ -3,9 +3,8 @@ import { View, Button, Text, Alert, ActivityIndicator } from "react-native"
 import * as Google from 'expo-auth-session/providers/google';
 import * as WebBrowser from 'expo-web-browser';
 
-// ENVOIROMENT VARIABLES
-const REACT_APP_GOOGLE_EXPO_CLIENT_ID = "55679260638-cfumf5qacpehgjevtv2id46ij70d6t2d.apps.googleusercontent.com"
-const REACT_APP_GOOGLE_ANDROID_CLIENT_ID = "55679260638-u536a1pi7or0o5fgpudtsl0accctq5ot.apps.googleusercontent.com"
+// CONSTANTS
+import { REACT_APP_GOOGLE_EXPO_CLIENT_ID, REACT_APP_GOOGLE_ANDROID_CLIENT_ID } from "../../utils/constants";
 
 // CONTEXT
 import { useAuth } from "../../context/AuthContext";
