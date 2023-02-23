@@ -57,10 +57,10 @@ const ActivityRegisterScreen = () => {
   }, [])
 
   const handleSetDescription = (text) => {
-    if (text.trim().length > 0) {
-      setActivityDescription(text);
-    } else if (text.length > 255) {
+    if (text.length > 255) {
       Alert.alert("A descrição deve ter no máximo 255 caracteres");
+    } else {
+      setActivityDescription(text);
     }
   };
 
@@ -77,11 +77,13 @@ const ActivityRegisterScreen = () => {
 
   const handleFinishRegister = async () => {
     const periodIsValid = checkPeriod();
-    if (periodIsValid && activityMetrics && activityDescription && activityVoucher) {
+    const descriptionIsValid = !activityDescription || (activityDescription.trim().length > 0);
+
+    if (periodIsValid && activityMetrics && descriptionIsValid && activityVoucher) {
       setOpenModal(true);
     } else if (!periodIsValid) {
       Alert.alert("Período inválido");
-    } else if (!activityDescription) {
+    } else if (!descriptionIsValid) {
       Alert.alert("Descrição inválida");
     } else if (!activityVoucher) {
       Alert.alert("Documento inválido");
