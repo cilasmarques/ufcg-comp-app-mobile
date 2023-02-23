@@ -33,6 +33,8 @@ sudo npm install -g eas-cli
 git clone https://github.com/cilasmarques/ufcg-comp-app-mobile
 cd ufcg-comp-app-mobile
 ```
+> Configure as variaveis do **src/utils/constants**
+
 
 ## Verifique a integridade do código
 ```
