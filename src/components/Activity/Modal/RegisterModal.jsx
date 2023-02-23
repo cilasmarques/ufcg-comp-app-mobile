@@ -26,7 +26,7 @@ const ActivityRegisterModal = ({ clearData, openModal, setOpenModal, activityKin
     const data = new FormData();
     data.append('owner_email', user.email);
     data.append('kind', activityKind);
-    data.append('description', activityDescription);
+    data.append('description', activityDescription.trim());
     data.append('voucher', {
       type: activityVoucher.mimeType,
       name: activityVoucher.name,
@@ -69,8 +69,8 @@ const ActivityRegisterModal = ({ clearData, openModal, setOpenModal, activityKin
             activityStatus={ACTIVITY_STATE_CREATED}
             activityJustify={null}
             activityUpdatedTime={new Date()}
+            tableModalContainer={true}
           />
-
           {isLoading ?
             <ActivityIndicator size="large" color="#004A8F" /> :
             <Button

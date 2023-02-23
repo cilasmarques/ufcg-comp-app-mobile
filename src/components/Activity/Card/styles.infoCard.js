@@ -8,8 +8,7 @@ const styles = StyleSheet.create({
     backgroundColor: (status === ACTIVITY_STATE_APPROVED) ? "#368C72" : (status === ACTIVITY_STATE_REJECTED) ? "#8C3636" : "black",
     borderRadius: 10,
     marginBottom: 10,
-    
-    alignItems: "center",
+    alignItems: "center",    
   }),
   tableContainerView: status => ({
     minWidth: "100%",
@@ -25,6 +24,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
   },
+  tableContainer: tableModalContainer => ({
+    height: tableModalContainer ? 170 : null,
+    overflow: "hidden",
+    borderRadius: 10,
+  }),
   tableHead: {
     height: 40,
     backgroundColor: '#f1f8ff'
@@ -34,7 +38,7 @@ const styles = StyleSheet.create({
     borderColor: '#C1C0B9'
   },
   tableText: {
-    margin: 6
+    padding: 5
   },
 });
 

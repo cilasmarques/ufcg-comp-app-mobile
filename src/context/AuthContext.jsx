@@ -1,7 +1,7 @@
 import { createContext, useContext, useMemo, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import API, { setAuthToken } from "../services";
+import { setAuthToken } from "../services";
 
 export const useAuth = () => {
   const authContext = useContext(AuthContext);

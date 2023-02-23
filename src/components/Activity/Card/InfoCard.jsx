@@ -7,7 +7,7 @@ import { ACTIVITY_STATE_TRANSLATION_MAP } from "../../../utils/constants";
 // STYLES
 import styles from "./styles.infoCard";
 
-const ActivityInfoCard = ({ tableHeader, tableContent, activityStatus, activityJustify, activityUpdatedTime }) => {
+const ActivityInfoCard = ({ tableModalContainer, tableHeader, tableContent, activityStatus, activityJustify, activityUpdatedTime }) => {
   function formatDate(date) {
     const dateAux = new Date(date);
     let day = dateAux.getDate().toString().padStart(2, '0');
@@ -20,9 +20,9 @@ const ActivityInfoCard = ({ tableHeader, tableContent, activityStatus, activityJ
   return (
     <View style={styles.activityContainerView(activityStatus)}>
       <View style={styles.tableContainerView(activityStatus)}>
-        <Table borderStyle={styles.tableBorder}>
-          <Row data={tableHeader}/>
-          <Rows data={[tableContent]} />
+        <Table borderStyle={styles.tableBorder} style={styles.tableContainer(tableModalContainer)}>
+          <Row data={tableHeader} textStyle={styles.tableText}/>
+          <Rows data={[tableContent]} textStyle={styles}/>
         </Table>
       </View>
       <Text style={styles.activityInfoText}>
