@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { View, Button, Text, Alert, ActivityIndicator } from "react-native"
+import { View, Button, ActivityIndicator, Image } from "react-native"
 import * as Google from 'expo-auth-session/providers/google';
 import * as WebBrowser from 'expo-web-browser';
 
 // CONSTANTS
-import { REACT_APP_GOOGLE_EXPO_CLIENT_ID, REACT_APP_GOOGLE_ANDROID_CLIENT_ID } from "../../utils/constants";
+import { REACT_APP_GOOGLE_ANDROID_CLIENT_ID } from "../../utils/constants";
 
 // CONTEXT
 import { useAuth } from "../../context/AuthContext";
@@ -20,8 +20,7 @@ WebBrowser.maybeCompleteAuthSession();
 const LoginScreen = () => {
   const { handleAuthSuccess, handleAuthFailure } = useAuth();
   const [request, response, promptAsync] = Google.useAuthRequest({
-    expoClientId: REACT_APP_GOOGLE_EXPO_CLIENT_ID,
-    androidClientId: REACT_APP_GOOGLE_ANDROID_CLIENT_ID
+    androidClientId: REACT_APP_GOOGLE_ANDROID_CLIENT_ID,
   });
   const [isLoading, setIsLoading] = useState(false);
 
@@ -35,12 +34,12 @@ const LoginScreen = () => {
 
   const handleAuthUser = async (authentication) => {
     setIsLoading(true);
-    const response = await authStudent(authentication);
-    if (response?.status === 200) {
+    try {
+      const response = await authStudent(authentication);
       const userData = response.data.user;
       handleAuthSuccess(authentication, userData);
-    } else {
-      Alert.alert("Falha ao realizar login", "Verifique suas credenciais e tente novamente.\nLembre-se de usar sua conta @ccc");
+    } catch (error) {
+      console.error(error);
       handleAuthFailure();
     }
     setIsLoading(false);
@@ -48,7 +47,11 @@ const LoginScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}> COMPUTAÇÃO@UFCG </Text>
+      <Image source={require('../../../assets/retangular-name.png')} style={{
+        width: 300,
+        height: 100,
+        resizeMode: 'contain',
+      }}/>
       {isLoading ?
         <ActivityIndicator size="large" color="#004A8F" /> :
         <Button

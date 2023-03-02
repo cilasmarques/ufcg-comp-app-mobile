@@ -1,9 +1,8 @@
 // OAUTH
-export const REACT_APP_GOOGLE_EXPO_CLIENT_ID="0000000-xxxxxxx.apps.googleusercontent.com";
-export const REACT_APP_GOOGLE_ANDROID_CLIENT_ID="0000000-xxxxxxx.apps.googleusercontent.com";
+export const REACT_APP_GOOGLE_ANDROID_CLIENT_ID = "55679260638-do5ttoramlts78out3e1d5j5desg5tpo.apps.googleusercontent.com";
 
 // API
-API_BASE_URL="http://10.0.2.2:8091"
+export const API_BASE_URL = "http://150.165.15.9:8091"
 export const API_ENDPOINT_GUIDE_ACTIVITIES = '/guide/activities';
 export const API_ENDPOINT_AUTH_STUDENT = '/auth/user/student';
 export const API_ENDPOINT_ACTIVITY_REGISTER = '/activity/register';

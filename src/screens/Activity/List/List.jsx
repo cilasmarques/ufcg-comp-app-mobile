@@ -16,11 +16,12 @@ import { fetchActivities } from '../../../services/ActivityService'
 import styles from "./styles.list";
 
 const ActivitiesListScreen = () => {
-  const initialPageConfiguration = { page: 0, size: 1000, sortField: 'id', sortOrder: 'asc' };
+  const initialPageConfiguration = { page: 0, size: 1000, sortField: 'id', sortOrder: 'desc' };
 
   const { user } = useAuth();
   const [activities, setActivities] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -36,16 +37,20 @@ const ActivitiesListScreen = () => {
   };
 
   const loadData = async () => {
-    const result = await fetchActivities(
-      { "owner_email": user.email },
-      initialPageConfiguration.page,
-      initialPageConfiguration.size,
-      initialPageConfiguration.sortField,
-      initialPageConfiguration.sortOrder
-    );
-
-    if (result)
-      setActivities(result.data.activities);
+    setIsLoading(true);
+    try {
+      const response = await fetchActivities(
+        { "owner_email": user.email },
+        initialPageConfiguration.page,
+        initialPageConfiguration.size,
+        initialPageConfiguration.sortField,
+        initialPageConfiguration.sortOrder
+      );
+      setActivities(response.data.activities);
+    } catch (error) {
+      console.log(error);
+    }
+    setIsLoading(false);
   };
 
   return (
@@ -86,7 +91,7 @@ const ActivitiesListScreen = () => {
             />
           }
         /> :
-        <ActivityIndicator size="large" color="#004A8F" />
+        (isLoading && <ActivityIndicator size="large" color="#004A8F" />)
       }
     </View >
   )

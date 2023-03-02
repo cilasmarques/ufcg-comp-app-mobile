@@ -50,8 +50,12 @@ const ActivityRegisterScreen = () => {
 
   useEffect(() => {
     const loadData = async () => {
-      const response = await fetchActivitiesMetrics();
-      setDBActMetricsInfo(response.data.metrics_info);
+      try {
+        const response = await fetchActivitiesMetrics();
+        setDBActMetricsInfo(response.data.metrics_info);
+      } catch (error) {
+        console.error(error);
+      }
     }
     loadData();
   }, [])

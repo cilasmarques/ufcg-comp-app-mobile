@@ -15,6 +15,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#80B6CE",
     borderRadius: 3
   },
+  buttonEnabled: {
+    width: 300,
+    height: 35,
+    justifyContent: "center",
+    backgroundColor: "#368C72",
+    borderRadius: 3
+  },
   buttonText: {
     color: "#FFFFFF",
     textAlign: "center",

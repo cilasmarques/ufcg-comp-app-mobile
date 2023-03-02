@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Alert } from "react-native";
 import { API_BASE_URL } from "../utils/constants";
 
 const API = axios.create({
@@ -16,15 +17,16 @@ export const setAuthToken = token => {
   }
 };
 
-export const handleErrors = error => {
+export const handleErrors = (error, customMessage) => {
   if (error.response) {
-    console.error(error.response.data);
-    console.error(error.response.status);
-    console.error(error.response.headers);
+    if (error.response.data.message)
+      Alert.alert("Erro", error.response.data.message);
+    else if (customMessage)
+      Alert.alert("Erro", customMessage);
   } else if (error.request) {
-    console.error(error.request);
+    Alert.alert("Erro", "Erro ao se comunicar com o servidor");
   } else {
-    console.error("Error", error.message);
+    Alert.alert("Erro", "Erro ao realizar a operação");
   }
 };
 

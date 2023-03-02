@@ -11,10 +11,8 @@ import ProcessRegisterModal from "../../../components/Process/Modal/RegisterModa
 // CONTEXT
 import { useAuth } from "../../../context/AuthContext";
 
-// CONSTANTS
-import { API_BASE_URL, API_ENDPOINT_GUIDE_ACTIVITIES } from "../../../utils/constants";
-
 // SERVICES
+import { API_BASE_URL, API_ENDPOINT_GUIDE_ACTIVITIES } from "../../../services";
 import { fetchActivitiesComputedCredits } from "../../../services/ActivityService";
 
 // STYLES
@@ -32,7 +30,7 @@ const DashboardScreen = () => {
   const loadData = async () => {
     if (user) {
       const response = await fetchActivitiesComputedCredits(user.email);
-      if (response) {
+      try {
         const credits = response.data.credits_info;
         const missing = credits.missing_credits;
         const computed = credits.computed_credits;
@@ -45,6 +43,8 @@ const DashboardScreen = () => {
         } else {
           setDisableGeneration(false);
         }
+      } catch (error) {
+        console.log(error);
       }
     }
   };
@@ -100,12 +100,13 @@ const DashboardScreen = () => {
         <Button title="Atividades Registradas" onPress={() => navigation.navigate('Activities List')} />
         <Button
           title="Gerar Processo"
+          variant="licenseButton"
           disabled={disableGeneration}
           onPress={disableGeneration ? null : () => setOpenProcessModal(true)}
         />
       </View>
 
-      <ProcessRegisterModal //TODO tirar isso daqui
+      <ProcessRegisterModal
         openModal={openProcessModal}
         setOpenModal={setOpenProcessModal}
       />

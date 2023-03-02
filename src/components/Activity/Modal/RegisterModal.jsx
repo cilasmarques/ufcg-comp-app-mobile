@@ -38,14 +38,13 @@ const ActivityRegisterModal = ({ clearData, openModal, setOpenModal, activityKin
     activityPeriod?.endDate && data.append('end_date', new Date(activityPeriod.endDate).toISOString());
 
     setIsLoading(true);
-    const response = await registerActivity(data);
-    if (response?.status === 200) {
+    try {
+      const response = await registerActivity(data);
+      Alert.alert(response.data.message);
       clearData();
-      Alert.alert("Atividade registrada com sucesso");
-    } else {
-      Alert.alert("Erro ao registrar a atividade", "Por favor, verifique os campos e tente novamente");
+    } catch (error) {
+      console.error(error);
     }
-
     setIsLoading(false);
     setOpenModal(false);
   };
@@ -66,9 +65,9 @@ const ActivityRegisterModal = ({ clearData, openModal, setOpenModal, activityKin
           <ActivityInfoCard
             tableHeader={['Tipo de atividade', 'Descrição Ativade', 'Período', 'Comprovação']}
             tableContent={[
-              activityKind, 
-              activityDescription, 
-              activityPeriod ? activityPeriod.fullPeriod : '-' , 
+              activityKind,
+              activityDescription,
+              activityPeriod ? activityPeriod.fullPeriod : '-',
               activityVoucher?.name
             ]}
             activityStatus={ACTIVITY_STATE_CREATED}

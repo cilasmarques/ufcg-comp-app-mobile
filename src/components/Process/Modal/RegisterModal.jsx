@@ -1,4 +1,5 @@
-import { View, Text, Modal, Alert } from "react-native";
+import { useState } from "react";
+import { View, Text, Modal, Alert, ActivityIndicator } from "react-native";
 import { Button, NativeBaseProvider } from "native-base";
 import * as FileSystem from 'expo-file-system';
 import { Buffer } from "buffer";
@@ -14,10 +15,12 @@ import styles from "./styles.component";
 
 const ProcessRegisterModal = ({ openModal, setOpenModal }) => {
   const { user } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleGenerateProcess = async () => {
+    setIsLoading(true);
     try {
-      const response = await generateProcess({ owner_email: user.email });
+    const response = await generateProcess({ owner_email: user.email });
       const buff = Buffer.from(response.data.file, 'base64');
       const file = buff.toString('base64');
 
@@ -32,12 +35,13 @@ const ProcessRegisterModal = ({ openModal, setOpenModal }) => {
           Alert.alert('Sucesso', 'Processo salvo com sucesso');
           setOpenModal(false);
         }).catch((e) => {
-          console.error(e);
+          Alert.alert('Erro', 'Não foi possível gerar o processo');
         });
       }
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error(error);
     }
+    setIsLoading(false);
   };
 
   return (
@@ -52,10 +56,14 @@ const ProcessRegisterModal = ({ openModal, setOpenModal }) => {
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalTitle}>Finalizando!</Text>
-            <Button style={styles.footerButton} onPress={handleGenerateProcess}>
-              Finalizar
-            </Button>
+            <Text style={styles.modalTitle}>Atenção!</Text>
+            <Text style={styles.modalText}>Apenas o processo mais recente é considerado válido, enquanto os processos anteriores são desconsiderados.</Text>
+            {isLoading ?
+              <ActivityIndicator size="large" color="#004A8F" /> :
+              <Button style={styles.footerButton} onPress={handleGenerateProcess}>
+                Gerar processo
+              </Button>
+            }
           </View>
         </View>
       </Modal>

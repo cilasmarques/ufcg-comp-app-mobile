@@ -15,12 +15,22 @@ const Button = (props) => {
           <Text style={styles.documentPickerFileName}>{props.filename}</Text>
         </View>
       );
+    case 'licenseButton':
+      return (
+        <TouchableOpacity
+          style={props.disabled ? styles.buttonDisabled : styles.buttonEnabled}
+          onPress={props.onPress}
+          {...props}
+        >
+          <Text style={styles.buttonText}>{props.title}</Text>
+        </TouchableOpacity>
+      );
     default:
       return (
         <TouchableOpacity
-          {...props}
+          style={styles.button}
           onPress={props.onPress}
-          style={props.disabled ? styles.buttonDisabled : styles.button}
+          {...props}
         >
           <Text style={styles.buttonText}>{props.title}</Text>
         </TouchableOpacity>
