@@ -25,10 +25,11 @@ export const PrivateRoutes = () => {
   function CustomDrawerContent(props) {
     return (
       <DrawerContentScrollView contentContainerStyle={styles.drawerContainer} {...props}>
-        <Text style={styles.mainTitle}> COMPUTAÇÃO@UFCG </Text>
-
         <ImageBackground style={styles.imageBackgroundContainer}>
-          <Image style={styles.image} source={{ uri: user?.picture }} />
+          <View style={styles.logoContainer}>
+            <Image source={require('../../assets/retangular-name.png')} style={styles.logoImage}/>
+          </View>
+          <Image style={styles.userImage} source={{ uri: user?.picture }} />
           <Text style={styles.userData} >Olá, {user?.name}</Text>
         </ImageBackground>
 

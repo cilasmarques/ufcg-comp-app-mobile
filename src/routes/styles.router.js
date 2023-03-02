@@ -19,7 +19,22 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 10,
   },
-  image: {
+  logoContainer: {
+    backgroundColor: '#F1F3FF',
+    width: 250,
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    marginTop: 20,
+    marginBottom: 30,
+  },
+  logoImage: {
+    width: 200,
+    height: 50,
+    resizeMode: 'contain'
+  },
+  userImage: {
     width: 80,
     height: 80,
     borderRadius: 50,
@@ -35,7 +50,8 @@ const styles = StyleSheet.create({
     height: "100%",
     padding: 10,
     borderRadius: 10,
-  }
+  },
+
 });
 
 export default styles;
