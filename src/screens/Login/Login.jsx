@@ -47,11 +47,7 @@ const LoginScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Image source={require('../../../assets/retangular-name.png')} style={{
-        width: 300,
-        height: 100,
-        resizeMode: 'contain',
-      }}/>
+      <Image source={require('../../../assets/retangular-name.png')} style={styles.mainImage}/>
       {isLoading ?
         <ActivityIndicator size="large" color="#004A8F" /> :
         <Button

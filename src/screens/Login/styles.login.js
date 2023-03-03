@@ -7,10 +7,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  title: {
-    fontSize: 25,
-    color: "#004A8F",
-  },
+  mainImage: {
+    width: 300,
+    height: 100,
+    resizeMode: 'contain',
+  }
 });
 
 export default styles;
