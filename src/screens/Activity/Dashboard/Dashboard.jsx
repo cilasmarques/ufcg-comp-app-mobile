@@ -8,11 +8,13 @@ import Button from "../../../components/General/Button/Button";
 import InfoBox from "../../../components/General/InfoBox/InfoBox";
 import ProcessRegisterModal from "../../../components/Process/Modal/RegisterModal";
 
+// CONSTANTS
+import { API_BASE_URL, API_ENDPOINT_GUIDE_ACTIVITIES } from "../../../utils/constants";
+
 // CONTEXT
 import { useAuth } from "../../../context/AuthContext";
 
 // SERVICES
-import { API_BASE_URL, API_ENDPOINT_GUIDE_ACTIVITIES } from "../../../services";
 import { fetchActivitiesComputedCredits } from "../../../services/ActivityService";
 
 // STYLES

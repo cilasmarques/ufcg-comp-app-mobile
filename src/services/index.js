@@ -20,13 +20,13 @@ export const setAuthToken = token => {
 export const handleErrors = (error, customMessage) => {
   if (error.response) {
     if (error.response.data.message)
-      Alert.alert("Erro", error.response.data.message);
+      Alert.alert("Ops", error.response.data.message);
     else if (customMessage)
-      Alert.alert("Erro", customMessage);
+      Alert.alert("Ops", customMessage);
   } else if (error.request) {
-    Alert.alert("Erro", "Erro ao se comunicar com o servidor");
+    Alert.alert("Ops", "Falha ao se comunicar com o servidor");
   } else {
-    Alert.alert("Erro", "Erro ao realizar a operação");
+    Alert.alert("Ops", "Falha ao realizar a operação");
   }
 };
 
