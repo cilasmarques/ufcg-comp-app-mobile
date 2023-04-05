@@ -35,6 +35,10 @@ cd ufcg-comp-app-mobile
 ```
 > Configure as variaveis do **src/utils/constants**
 
+## Instale as dependencias
+```
+yarn install
+```
 
 ## Verifique a integridade do código
 ```
