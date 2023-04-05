@@ -2,11 +2,11 @@
 export const REACT_APP_GOOGLE_ANDROID_CLIENT_ID = "55679260638-do5ttoramlts78out3e1d5j5desg5tpo.apps.googleusercontent.com";
 
 // API
-export const API_BASE_URL = "http://150.165.15.9:8091"
+export const API_BASE_URL = "http://192.168.0.13:8091/";
 export const API_ENDPOINT_GUIDE_ACTIVITIES = '/guide/activities';
 export const API_ENDPOINT_AUTH_STUDENT = '/auth/user/student';
 export const API_ENDPOINT_ACTIVITY_REGISTER = '/activity/register';
-export const API_ENDPOINT_ACTIVITY_FIND_BY_STATE = '/activities/find_by_state';
+export const API_ENDPOINT_ACTIVITY_FIND_BY_OWNER_STATE = '/activities/find_by_owner_state';
 export const API_ENDPOINT_ACTIVITY_COMPUTE_CREDITS = '/activities/computeCredits';
 export const API_ENDPOINT_ACTIVITY_METRICS = '/activities/metrics';
 export const API_ENDPOINT_PROCESS_GENERATE = '/process/generate';
